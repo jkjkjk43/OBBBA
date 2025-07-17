@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBBBA Tax Guide for Preparers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Professional Blue & Slate -->
+    <!-- Application Structure Plan: A task-oriented guide for tax professionals. The structure is reorganized from general topics to client-centric sections: "Individual Tax Changes" and "Business Tax Changes." This allows preparers to quickly find relevant information based on the client they are serving. Each section uses clear headings, comparison tables ("Old Law vs. New Law"), and "Practice Point" callouts to deliver actionable advice. This structure is more intuitive for a professional audience than a bill-summary format. -->
+    <!-- Visualization & Content Choices: 
+        1. Report Info: TCJA permanence. Goal: Inform/Compare. Viz/Method: HTML comparison tables for tax brackets and standard deductions. Justification: Provides a direct, at-a-glance view of the changes, which is essential for tax calculation.
+        2. Report Info: New targeted deductions. Goal: Inform/Apply. Viz/Method: Interactive cards for each deduction (Tips, Overtime, Car Loan) detailing limits and phase-outs. Justification: Breaks down complex new rules into digestible, client-specific chunks.
+        3. Report Info: Business tax changes (Sec 179, Bonus Depreciation). Goal: Inform/Advise. Viz/Method: Clear text summaries with "Planning Opportunity" notes. Justification: Highlights opportunities for preparers to provide proactive advice to business clients.
+        4. Report Info: Energy credit terminations. Goal: Warn/Advise. Viz/Method: A prominent "Action Required" table with termination dates. Justification: Creates urgency and flags critical deadlines for clients who may have planned investments based on the old law.
+        5. Report Info: Overall fiscal impact. Goal: Contextualize. Viz/Method: Simplified doughnut chart showing the source of tax changes (Individual vs. Corporate). Justification: Gives preparers a high-level understanding of the bill's fiscal architecture.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #334155; /* slate-700 */
+        }
+        .nav-active {
+            color: #2563eb;
+            font-weight: 600;
+            border-bottom: 2px solid #2563eb;
+        }
+        .nav-link {
+            transition: color 0.2s ease-in-out;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover {
+            color: #2563eb;
+        }
+        .practice-point {
+            background-color: #eef2ff; /* indigo-50 */
+            border-left: 4px solid #4f46e5; /* indigo-600 */
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.25rem;
+        }
+        .action-required {
+            background-color: #fef2f2; /* red-50 */
+            border-left: 4px solid #dc2626; /* red-600 */
+        }
+        .comparison-table th {
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 45vh;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <header id="header" class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#home" class="text-xl font-bold text-slate-800">OBBBA: Tax Preparer's Guide</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Overview</a>
+                        <a href="#individual-changes" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Individual Clients</a>
+                        <a href="#business-changes" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Business Clients</a>
+                        <a href="#key-dates" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Key Dates & Resources</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <section id="home" class="text-center mb-16 pt-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Navigating the OBBBA Tax Changes</h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-8">
+                This guide is designed for tax professionals to quickly understand and apply the significant tax law changes introduced by the One Big Beautiful Bill Act (OBBBA). Use this resource to advise your individual and business clients effectively.
+            </p>
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-2xl font-bold text-slate-700 mb-4">High-Level Tax Impact</h3>
+                <div class="chart-container">
+                    <canvas id="taxImpactChart"></canvas>
+                </div>
+                <p class="text-sm text-slate-500 mt-4">The bill's tax provisions primarily consist of making the 2017 TCJA permanent, with new targeted (but temporary) relief measures. <a href="https://www.crfb.org/search?keys=OBBBA" target="_blank" class="learn-more">Read fiscal analysis &rarr;</a></p>
+            </div>
+        </section>
+
+        <section id="individual-changes" class="mb-16 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 pb-2 border-slate-300">Individual Tax Changes</h2>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Rates & Standard Deduction</h3>
+                <p class="text-slate-600 mb-4">OBBBA makes the individual tax rates and higher standard deduction from the TCJA permanent, preventing the scheduled "tax cliff" in 2026. The standard deduction is also increased beyond the TCJA levels.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">2025 Standard Deduction Comparison</h4>
+                        <table class="w-full text-left comparison-table">
+                            <thead><tr><th class="p-2">Filing Status</th><th class="p-2">Old Law (Projected)</th><th class="p-2 font-bold text-blue-600">New Law (OBBBA)</th></tr></thead>
+                            <tbody id="std-deduction-table" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">2025 Top Marginal Tax Rate</h4>
+                        <table class="w-full text-left comparison-table">
+                            <thead><tr><th class="p-2">Law</th><th class="p-2">Top Rate</th></tr></thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr><td class="p-2">Old Law (Reversion)</td><td class="p-2">39.6%</td></tr>
+                                <tr><td class="p-2 font-bold text-blue-600">New Law (OBBBA)</td><td class="p-2 font-bold text-blue-600">37.0%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 <div class="practice-point">
+                    <p><span class="font-bold">Practice Point:</span> Update your tax planning software and projections for all individual clients. The permanent 37% top rate and higher standard deduction will significantly alter tax liability calculations compared to prior law projections for 2026 and beyond.</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">New Targeted Deductions (Temporary)</h3>
+                <p class="text-slate-600 mb-4">The bill introduces three high-profile, temporary deductions aimed at middle-class taxpayers. These expire after 2028.</p>
+                <div id="new-deductions-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Estate & Gift Tax</h3>
+                <p class="text-slate-600 mb-2">The bill permanently sets the estate and gift tax exemption at a much higher level, preventing the scheduled drop.</p>
+                <h4 class="font-bold text-lg mb-2">Federal Exemption Amount</h4>
+                <table class="w-full text-left comparison-table">
+                    <thead><tr><th class="p-2">Law</th><th class="p-2">Exemption per Person (Projected)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr><td class="p-2">Old Law (Reversion)</td><td class="p-2">~$7 Million</td></tr>
+                        <tr><td class="p-2 font-bold text-blue-600">New Law (OBBBA)</td><td class="p-2 font-bold text-blue-600">$15 Million (indexed)</td></tr>
+                    </tbody>
+                </table>
+                 <div class="practice-point">
+                    <p><span class="font-bold">Practice Point:</span> Re-evaluate estate plans for high-net-worth clients. Many clients who were expecting to be subject to estate tax under the old law may no longer be. This creates significant planning opportunities.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="business-changes" class="mb-16 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 pb-2 border-slate-300">Business Tax Changes</h2>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Pass-Throughs & Corporations</h3>
+                <p class="text-slate-600 mb-4">OBBBA provides permanent tax relief and certainty for both pass-through entities and C-corporations.</p>
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><span class="font-bold">Sec. 199A QBI Deduction:</span> The 20% deduction for Qualified Business Income from pass-throughs is made <span class="font-bold text-blue-600">permanent</span>.</li>
+                    <li><span class="font-bold">Corporate Tax Rate:</span> The 21% flat corporate tax rate is made <span class="font-bold text-blue-600">permanent</span>.</li>
+                </ul>
+                <div class="practice-point">
+                    <p><span class="font-bold">Practice Point:</span> The permanence of the QBI deduction solidifies its importance in choice-of-entity analysis. Continue to evaluate S-Corp vs. C-Corp structures for clients, now with the certainty that these key provisions will remain.</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Capital Investment & Expensing</h3>
+                <p class="text-slate-600 mb-4">The bill makes permanent two of the most powerful pro-growth provisions for business investment.</p>
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><span class="font-bold">100% Bonus Depreciation:</span> The ability to immediately deduct 100% of the cost of eligible property (e.g., equipment, machinery) is made <span class="font-bold text-blue-600">permanent</span>, reversing the scheduled phase-down.</li>
+                    <li><span class="font-bold">R&D Expensing:</span> The requirement to amortize R&D expenses over 5 years is repealed. Businesses can once again <span class="font-bold text-blue-600">immediately expense</span> domestic R&D costs.</li>
+                </ul>
+                 <div class="practice-point">
+                    <p><span class="font-bold">Planning Opportunity:</span> Advise clients to re-evaluate their capital expenditure plans. The permanence of 100% bonus depreciation provides a powerful incentive to invest in new equipment and technology.</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md action-required">
+                <h3 class="text-2xl font-semibold text-red-700 mb-4">ACTION REQUIRED: Termination of Energy Credits</h3>
+                <p class="text-red-800 mb-4">OBBBA terminates numerous clean energy credits. Clients who have made investment decisions based on these credits need immediate advice.</p>
+                <table id="credit-termination-table" class="w-full text-left comparison-table">
+                     <thead><tr><th class="p-2">Credit</th><th class="p-2 font-bold text-red-600">Termination Date</th></tr></thead>
+                     <tbody class="divide-y divide-slate-200"></tbody>
+                </table>
+                <div class="practice-point mt-4 !border-red-600 !bg-red-100">
+                    <p class="!text-red-900"><span class="font-bold">Urgent Practice Point:</span> Identify all individual and business clients who may have planned to claim these credits. They may need to accelerate project timelines to place property in service before the deadlines. This is especially critical for the Clean Vehicle credit.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="key-dates" class="pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 pb-2 border-slate-300">Key Dates & Resources</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Tax Provision Timeline</h3>
+                <ul id="timeline-list" class="list-disc list-inside space-y-3"></ul>
+                <h3 class="text-2xl font-semibold text-slate-700 mt-8 mb-4">External Resources</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><a href="https://www.irs.gov" target="_blank" class="learn-more">IRS Main Website (for future guidance)</a></li>
+                    <li><a href="https://www.cbo.gov" target="_blank" class="learn-more">Congressional Budget Office (for fiscal analysis)</a></li>
+                    <li><a href="https://www.taxpolicycenter.org/" target="_blank" class="learn-more">Tax Policy Center (for independent analysis)</a></li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-20">
+        <div class="container mx-auto px-8 py-6 text-center text-sm">
+            <p>&copy; 2025 OBBBA Tax Preparer's Guide. For informational and educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const taxData = {
+                charts: {
+                    taxImpact: {
+                        labels: ['Permanent Individual TCJA Cuts', 'Permanent Corporate TCJA Cuts', 'New Targeted Relief', 'Business Investment Incentives'],
+                        data: [2.5, 1.5, 0.5, 0.8], // Trillions
+                    }
+                },
+                standardDeduction: [
+                    { status: 'Single', old: '$14,600', new: '$23,625' },
+                    { status: 'Married Filing Jointly', old: '$29,200', new: '$31,500' },
+                    { status: 'Head of Household', old: '$21,900', new: '$31,500' }
+                ],
+                newDeductions: [
+                    { 
+                        title: 'No Tax on Tips', 
+                        icon: '&#x1F4B8;',
+                        details: 'Above-the-line deduction for qualified tip income.',
+                        limit: '$25,000 / year',
+                        phaseout: '$150k - $170k MAGI (Single)',
+                        client: 'Service industry workers, restaurant staff.'
+                    },
+                    { 
+                        title: 'No Tax on Overtime', 
+                        icon: '&#x23F0;',
+                        details: 'Deduction for premium portion of overtime pay.',
+                        limit: '$12,500 / year',
+                        phaseout: '$150k - $170k MAGI (Single)',
+                        client: 'Hourly employees, skilled trades.'
+                    },
+                    { 
+                        title: 'No Tax on Car Loan Interest', 
+                        icon: '&#x1F697;',
+                        details: 'Deduction for interest on a new car loan.',
+                        limit: '$10,000 / year',
+                        phaseout: '$100k - $120k MAGI (Single)',
+                        client: 'Clients purchasing new vehicles.'
+                    }
+                ],
+                creditTerminations: [
+                    { name: 'Clean Vehicle Credit (New & Used)', date: 'Sept 30, 2025' },
+                    { name: 'Residential Clean Energy Credit', date: 'Dec 31, 2025' },
+                    { name: 'Clean Electricity Production/Investment Credits (45Y/48E)', date: 'Dec 31, 2027' }
+                ],
+                timeline: [
+                    { date: 'Jan 1, 2025', event: 'Permanent TCJA rates, QBI deduction, and bonus depreciation take effect.' },
+                    { date: 'Jan 1, 2025', event: 'New deductions for tips, overtime, and car loan interest become available.' },
+                    { date: 'Sept 30, 2025', event: 'DEADLINE: Last day for a vehicle to be acquired to qualify for the Clean Vehicle Credit.' },
+                    { date: 'Dec 31, 2025', event: 'DEADLINE: Last day for residential clean energy property to be placed in service to qualify for the credit.' },
+                    { date: 'Dec 31, 2028', event: 'EXPIRATION: New targeted deductions for tips, overtime, and car loan interest expire.' }
+                ]
+            };
+
+            // Populate Tables
+            const stdDeductionTable = document.getElementById('std-deduction-table');
+            taxData.standardDeduction.forEach(item => {
+                stdDeductionTable.innerHTML += `<tr><td class="p-2">${item.status}</td><td class="p-2">${item.old}</td><td class="p-2 font-bold text-blue-600">${item.new}</td></tr>`;
+            });
+
+            const creditTerminationTable = document.getElementById('credit-termination-table').getElementsByTagName('tbody')[0];
+            taxData.creditTerminations.forEach(item => {
+                creditTerminationTable.innerHTML += `<tr><td class="p-2">${item.name}</td><td class="p-2 font-bold text-red-600">${item.date}</td></tr>`;
+            });
+            
+            // Populate New Deductions
+            const newDeductionsContainer = document.getElementById('new-deductions-container');
+            taxData.newDeductions.forEach(deduction => {
+                newDeductionsContainer.innerHTML += `
+                    <div class="border border-slate-200 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <span class="text-3xl mr-3">${deduction.icon}</span>
+                            <h4 class="font-bold text-lg text-slate-800">${deduction.title}</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-3">${deduction.details}</p>
+                        <ul class="text-sm space-y-1">
+                            <li><strong>Limit:</strong> ${deduction.limit}</li>
+                            <li><strong>Phase-out (Single):</strong> ${deduction.phaseout}</li>
+                            <li><strong>Ideal Client:</strong> ${deduction.client}</li>
+                        </ul>
+                    </div>
+                `;
+            });
+
+            // Populate Timeline
+            const timelineList = document.getElementById('timeline-list');
+            taxData.timeline.forEach(item => {
+                timelineList.innerHTML += `<li><span class="font-semibold">${item.date}:</span> ${item.event}</li>`;
+            });
+
+            // Render Chart
+            new Chart(document.getElementById('taxImpactChart').getContext('2d'), {
+                type: 'doughnut',
+                data: { 
+                    labels: taxData.charts.taxImpact.labels, 
+                    datasets: [{ 
+                        data: taxData.charts.taxImpact.data, 
+                        backgroundColor: ['#3b82f6', '#6366f1', '#a855f7', '#22c55e'],
+                        borderColor: '#f8fafc',
+                        borderWidth: 4
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += '$' + context.parsed + ' Trillion';
+                                    return label;
+                                }
+                            }
+                        }
+                    } 
+                }
+            });
+
+            // Nav Scroll Logic
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = 'home';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('nav-active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('nav-active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
