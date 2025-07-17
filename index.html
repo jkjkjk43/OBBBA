@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBBBA Tax Guide for Preparers</title>
+    <title>OBBBA Tax Guide for Preparers (Comprehensive)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,13 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Chosen Palette: Professional Blue & Slate -->
-    <!-- Application Structure Plan: A task-oriented guide for tax professionals. The structure is reorganized from general topics to client-centric sections: "Individual Tax Changes" and "Business Tax Changes." This allows preparers to quickly find relevant information based on the client they are serving. Each section uses clear headings, comparison tables ("Old Law vs. New Law"), and "Practice Point" callouts to deliver actionable advice. This structure is more intuitive for a professional audience than a bill-summary format. -->
+    <!-- Application Structure Plan: A task-oriented guide for tax professionals, rebuilt from scratch. The structure is client-centric: "Individual Tax Changes" and "Business Tax Changes." This allows preparers to quickly find relevant information. Each section uses clear headings, comparison tables ("Old Law vs. New Law"), "Practice Point" callouts, and new "Client Scenario" examples to deliver actionable advice. This structure is more intuitive and comprehensive for a professional audience. -->
     <!-- Visualization & Content Choices: 
-        1. Report Info: TCJA permanence. Goal: Inform/Compare. Viz/Method: HTML comparison tables for tax brackets and standard deductions. Justification: Provides a direct, at-a-glance view of the changes, which is essential for tax calculation.
-        2. Report Info: New targeted deductions. Goal: Inform/Apply. Viz/Method: Interactive cards for each deduction (Tips, Overtime, Car Loan) detailing limits and phase-outs. Justification: Breaks down complex new rules into digestible, client-specific chunks.
-        3. Report Info: Business tax changes (Sec 179, Bonus Depreciation). Goal: Inform/Advise. Viz/Method: Clear text summaries with "Planning Opportunity" notes. Justification: Highlights opportunities for preparers to provide proactive advice to business clients.
-        4. Report Info: Energy credit terminations. Goal: Warn/Advise. Viz/Method: A prominent "Action Required" table with termination dates. Justification: Creates urgency and flags critical deadlines for clients who may have planned investments based on the old law.
-        5. Report Info: Overall fiscal impact. Goal: Contextualize. Viz/Method: Simplified doughnut chart showing the source of tax changes (Individual vs. Corporate). Justification: Gives preparers a high-level understanding of the bill's fiscal architecture.
+        1. Report Info: TCJA permanence. Goal: Inform/Compare. Viz/Method: HTML comparison tables for tax brackets and standard deductions. Justification: Direct, at-a-glance view of changes.
+        2. Report Info: SALT Cap Increase. Goal: Inform/Apply. Viz/Method: Detailed table with years, caps, and a clear explanation of the MAGI phase-down, supported by a client scenario. Justification: Addresses a key, complex provision with practical examples.
+        3. Report Info: Family Credits. Goal: Inform/Compare. Viz/Method: Comparison table for key credits, supported by a scenario comparing the CDCC and FSA. Justification: Helps preparers advise on the best option for clients.
+        4. Report Info: Business tax changes (1099 Threshold). Goal: Inform/Advise. Viz/Method: Clear text summaries and tables with "Planning Opportunity" notes. Justification: Highlights opportunities for preparers to provide proactive advice.
+        5. Report Info: Energy credit terminations. Goal: Warn/Advise. Viz/Method: A prominent "Action Required" table with termination dates. Justification: Creates urgency and flags critical deadlines.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
@@ -42,6 +42,13 @@
         .practice-point {
             background-color: #eef2ff; /* indigo-50 */
             border-left: 4px solid #4f46e5; /* indigo-600 */
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.25rem;
+        }
+        .client-scenario {
+            background-color: #f0f9ff; /* sky-50 */
+            border-left: 4px solid #0284c7; /* sky-600 */
             padding: 1rem;
             margin-top: 1rem;
             border-radius: 0.25rem;
@@ -87,14 +94,13 @@
         <section id="home" class="text-center mb-16 pt-10">
             <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Navigating the OBBBA Tax Changes</h1>
             <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-8">
-                This guide is designed for tax professionals to quickly understand and apply the significant tax law changes introduced by the One Big Beautiful Bill Act (OBBBA). Use this resource to advise your individual and business clients effectively.
+                This guide is designed for tax professionals to quickly understand and apply the significant tax law changes introduced by the One Big Beautiful Bill Act (OBBBA). Use this resource with client scenarios to advise your individual and business clients effectively.
             </p>
             <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
                 <h3 class="text-2xl font-bold text-slate-700 mb-4">High-Level Tax Impact</h3>
                 <div class="chart-container">
                     <canvas id="taxImpactChart"></canvas>
                 </div>
-                <p class="text-sm text-slate-500 mt-4">The bill's tax provisions primarily consist of making the 2017 TCJA permanent, with new targeted (but temporary) relief measures. <a href="https://www.crfb.org/search?keys=OBBBA" target="_blank" class="learn-more">Read fiscal analysis &rarr;</a></p>
             </div>
         </section>
 
@@ -104,7 +110,6 @@
             <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                 <h3 class="text-2xl font-semibold text-slate-700 mb-4">Rates & Standard Deduction</h3>
                 <p class="text-slate-600 mb-4">OBBBA makes the individual tax rates and higher standard deduction from the TCJA permanent, preventing the scheduled "tax cliff" in 2026. The standard deduction is also increased beyond the TCJA levels.</p>
-                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="font-bold text-lg mb-2">2025 Standard Deduction Comparison</h4>
@@ -124,8 +129,49 @@
                         </table>
                     </div>
                 </div>
-                 <div class="practice-point">
-                    <p><span class="font-bold">Practice Point:</span> Update your tax planning software and projections for all individual clients. The permanent 37% top rate and higher standard deduction will significantly alter tax liability calculations compared to prior law projections for 2026 and beyond.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">State and Local Tax (SALT) Deduction</h3>
+                <p class="text-slate-600 mb-4">The bill temporarily increases the cap on the SALT deduction for certain taxpayers before reverting to the old limit.</p>
+                <table class="w-full text-left comparison-table mb-4">
+                    <thead><tr><th class="p-2">Tax Year</th><th class="p-2">Old Law Cap</th><th class="p-2 font-bold text-blue-600">New Law Cap (OBBBA)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr><td class="p-2">2025</td><td class="p-2">$10,000</td><td class="p-2 font-bold text-blue-600">$40,000</td></tr>
+                        <tr><td class="p-2">2026-2029</td><td class="p-2">$10,000</td><td class="p-2 font-bold text-blue-600">Increases annually by 1%</td></tr>
+                        <tr><td class="p-2">2030+</td><td class="p-2">$10,000</td><td class="p-2 font-bold text-blue-600">$10,000</td></tr>
+                    </tbody>
+                </table>
+                <div class="bg-slate-100 p-4 rounded-md">
+                    <h4 class="font-bold text-slate-800">Important: MAGI Phase-Down</h4>
+                    <p class="text-sm text-slate-600">For tax years 2025-2029, the increased cap is reduced for higher-income taxpayers. The cap is reduced by 30% of the amount by which a taxpayer's MAGI exceeds the threshold, but the cap will not be reduced below $10,000.</p>
+                    <ul class="text-sm list-disc list-inside mt-2">
+                        <li><strong>2025 MAGI Threshold:</strong> $500,000 (for all filers except MFS)</li>
+                        <li><strong>Married Filing Separately:</strong> All caps and thresholds are halved.</li>
+                    </ul>
+                </div>
+                <div class="client-scenario">
+                    <p><span class="font-bold">Client Scenario:</span> A married couple in a high-tax state has a MAGI of $600,000 and paid $50,000 in property and state income taxes in 2025.</p>
+                    <ul class="list-decimal list-inside text-sm mt-2 space-y-1">
+                        <li><strong>Excess MAGI:</strong> $600,000 - $500,000 = $100,000</li>
+                        <li><strong>Cap Reduction:</strong> $100,000 * 30% = $30,000</li>
+                        <li><strong>New SALT Cap:</strong> $40,000 (initial cap) - $30,000 (reduction) = $10,000</li>
+                        <li><strong>Conclusion:</strong> Despite the higher cap, their income is too high, and their SALT deduction remains capped at $10,000.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Family & Dependent Credits</h3>
+                <p class="text-slate-600 mb-4">OBBBA makes significant, permanent enhancements to key tax provisions for families with children and dependents.</p>
+                <div id="family-credits-container" class="space-y-4"></div>
+                <div class="client-scenario">
+                    <p><span class="font-bold">Client Scenario:</span> A client with two children under 13 pays $16,000 in daycare expenses. Their AGI is $120,000.</p>
+                     <ul class="list-decimal list-inside text-sm mt-2 space-y-1">
+                        <li><strong>Option 1 (Child and Dependent Care Credit):</strong> The credit is 50% of eligible expenses, up to $8,000. The credit phases down above $125k AGI. At $120k AGI, they get the full 50% credit. Credit = 50% * $8,000 = <span class="font-bold">$4,000 tax savings</span>.</li>
+                        <li><strong>Option 2 (Dependent Care FSA):</strong> They can contribute $7,500 pre-tax. Assuming a 22% marginal federal rate, the savings are $7,500 * 22% = <span class="font-bold">$1,650 tax savings</span> (plus state tax savings).</li>
+                        <li><strong>Conclusion:</strong> For this client, the enhanced tax credit provides a significantly larger benefit than the FSA.</li>
+                    </ul>
                 </div>
             </div>
 
@@ -146,9 +192,6 @@
                         <tr><td class="p-2 font-bold text-blue-600">New Law (OBBBA)</td><td class="p-2 font-bold text-blue-600">$15 Million (indexed)</td></tr>
                     </tbody>
                 </table>
-                 <div class="practice-point">
-                    <p><span class="font-bold">Practice Point:</span> Re-evaluate estate plans for high-net-worth clients. Many clients who were expecting to be subject to estate tax under the old law may no longer be. This creates significant planning opportunities.</p>
-                </div>
             </div>
         </section>
 
@@ -171,11 +214,28 @@
                 <h3 class="text-2xl font-semibold text-slate-700 mb-4">Capital Investment & Expensing</h3>
                 <p class="text-slate-600 mb-4">The bill makes permanent two of the most powerful pro-growth provisions for business investment.</p>
                 <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li><span class="font-bold">100% Bonus Depreciation:</span> The ability to immediately deduct 100% of the cost of eligible property (e.g., equipment, machinery) is made <span class="font-bold text-blue-600">permanent</span>, reversing the scheduled phase-down.</li>
+                    <li><span class="font-bold">100% Bonus Depreciation:</span> The ability to immediately deduct 100% of the cost of eligible property is made <span class="font-bold text-blue-600">permanent</span>, reversing the scheduled phase-down.</li>
                     <li><span class="font-bold">R&D Expensing:</span> The requirement to amortize R&D expenses over 5 years is repealed. Businesses can once again <span class="font-bold text-blue-600">immediately expense</span> domestic R&D costs.</li>
                 </ul>
-                 <div class="practice-point">
-                    <p><span class="font-bold">Planning Opportunity:</span> Advise clients to re-evaluate their capital expenditure plans. The permanence of 100% bonus depreciation provides a powerful incentive to invest in new equipment and technology.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-semibold text-slate-700 mb-4">Information Reporting (Form 1099)</h3>
+                <p class="text-slate-600 mb-4">The threshold for issuing Form 1099-MISC and 1099-NEC for payments to non-employees is significantly increased.</p>
+                <table class="w-full text-left comparison-table">
+                    <thead><tr><th class="p-2">Law</th><th class="p-2">Reporting Threshold</th></tr></thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr><td class="p-2">Old Law</td><td class="p-2">$600</td></tr>
+                        <tr><td class="p-2 font-bold text-blue-600">New Law (OBBBA)</td><td class="p-2 font-bold text-blue-600">$2,000 (indexed for inflation)</td></tr>
+                    </tbody>
+                </table>
+                <div class="client-scenario">
+                   <p><span class="font-bold">Client Scenario:</span> Your small business client paid an independent contractor $1,800 for services in tax year 2026.</p>
+                   <ul class="list-decimal list-inside text-sm mt-2 space-y-1">
+                       <li><strong>Under Old Law:</strong> A Form 1099-NEC would be required since the payment is over $600.</li>
+                       <li><strong>Under New Law:</strong> No Form 1099-NEC is required since the payment is below the new $2,000 threshold.</li>
+                       <li><strong>Conclusion:</strong> This change reduces the administrative burden for clients making many small payments to contractors.</li>
+                   </ul>
                 </div>
             </div>
 
@@ -186,9 +246,6 @@
                      <thead><tr><th class="p-2">Credit</th><th class="p-2 font-bold text-red-600">Termination Date</th></tr></thead>
                      <tbody class="divide-y divide-slate-200"></tbody>
                 </table>
-                <div class="practice-point mt-4 !border-red-600 !bg-red-100">
-                    <p class="!text-red-900"><span class="font-bold">Urgent Practice Point:</span> Identify all individual and business clients who may have planned to claim these credits. They may need to accelerate project timelines to place property in service before the deadlines. This is especially critical for the Clean Vehicle credit.</p>
-                </div>
             </div>
         </section>
 
@@ -228,6 +285,11 @@
                     { status: 'Married Filing Jointly', old: '$29,200', new: '$31,500' },
                     { status: 'Head of Household', old: '$21,900', new: '$31,500' }
                 ],
+                familyCredits: [
+                    { name: 'Child Tax Credit', old: '$2,000 per child', new: '$2,500 per child' },
+                    { name: 'Child & Dependent Care Credit', old: 'Max $1,050 (1 child), $2,100 (2+)', new: 'Max $4,000 (1 child), $8,000 (2+)' },
+                    { name: 'Dependent Care FSA Limit', old: '$5,000 per household', new: '$7,500 per household' }
+                ],
                 newDeductions: [
                     { 
                         title: 'No Tax on Tips', 
@@ -235,7 +297,6 @@
                         details: 'Above-the-line deduction for qualified tip income.',
                         limit: '$25,000 / year',
                         phaseout: '$150k - $170k MAGI (Single)',
-                        client: 'Service industry workers, restaurant staff.'
                     },
                     { 
                         title: 'No Tax on Overtime', 
@@ -243,7 +304,6 @@
                         details: 'Deduction for premium portion of overtime pay.',
                         limit: '$12,500 / year',
                         phaseout: '$150k - $170k MAGI (Single)',
-                        client: 'Hourly employees, skilled trades.'
                     },
                     { 
                         title: 'No Tax on Car Loan Interest', 
@@ -251,7 +311,6 @@
                         details: 'Deduction for interest on a new car loan.',
                         limit: '$10,000 / year',
                         phaseout: '$100k - $120k MAGI (Single)',
-                        client: 'Clients purchasing new vehicles.'
                     }
                 ],
                 creditTerminations: [
@@ -261,10 +320,12 @@
                 ],
                 timeline: [
                     { date: 'Jan 1, 2025', event: 'Permanent TCJA rates, QBI deduction, and bonus depreciation take effect.' },
-                    { date: 'Jan 1, 2025', event: 'New deductions for tips, overtime, and car loan interest become available.' },
+                    { date: 'Jan 1, 2025', event: 'Increased SALT cap and enhanced family credits become effective.' },
                     { date: 'Sept 30, 2025', event: 'DEADLINE: Last day for a vehicle to be acquired to qualify for the Clean Vehicle Credit.' },
                     { date: 'Dec 31, 2025', event: 'DEADLINE: Last day for residential clean energy property to be placed in service to qualify for the credit.' },
-                    { date: 'Dec 31, 2028', event: 'EXPIRATION: New targeted deductions for tips, overtime, and car loan interest expire.' }
+                    { date: 'Jan 1, 2026', event: 'Increased 1099 reporting threshold takes effect.' },
+                    { date: 'Dec 31, 2028', event: 'EXPIRATION: New targeted deductions for tips, overtime, and car loan interest expire.' },
+                    { date: 'Dec 31, 2029', event: 'EXPIRATION: Increased SALT deduction cap expires.' }
                 ]
             };
 
@@ -279,20 +340,28 @@
                 creditTerminationTable.innerHTML += `<tr><td class="p-2">${item.name}</td><td class="p-2 font-bold text-red-600">${item.date}</td></tr>`;
             });
             
+            // Populate Family Credits
+            const familyCreditsContainer = document.getElementById('family-credits-container');
+            let familyCreditsTable = `<table class="w-full text-left comparison-table"><thead><tr><th class="p-2">Provision</th><th class="p-2">Old Law</th><th class="p-2 font-bold text-blue-600">New Law (OBBBA)</th></tr></thead><tbody class="divide-y divide-slate-200">`;
+            taxData.familyCredits.forEach(credit => {
+                familyCreditsTable += `<tr><td class="p-2 font-semibold">${credit.name}</td><td class="p-2">${credit.old}</td><td class="p-2 font-bold text-blue-600">${credit.new}</td></tr>`;
+            });
+            familyCreditsTable += `</tbody></table>`;
+            familyCreditsContainer.innerHTML = familyCreditsTable;
+
             // Populate New Deductions
             const newDeductionsContainer = document.getElementById('new-deductions-container');
             taxData.newDeductions.forEach(deduction => {
                 newDeductionsContainer.innerHTML += `
-                    <div class="border border-slate-200 p-4 rounded-lg">
+                    <div class="border border-slate-200 p-4 rounded-lg flex flex-col">
                         <div class="flex items-center mb-2">
                             <span class="text-3xl mr-3">${deduction.icon}</span>
                             <h4 class="font-bold text-lg text-slate-800">${deduction.title}</h4>
                         </div>
-                        <p class="text-sm text-slate-600 mb-3">${deduction.details}</p>
-                        <ul class="text-sm space-y-1">
+                        <p class="text-sm text-slate-600 mb-3 flex-grow">${deduction.details}</p>
+                        <ul class="text-sm space-y-1 mt-auto">
                             <li><strong>Limit:</strong> ${deduction.limit}</li>
                             <li><strong>Phase-out (Single):</strong> ${deduction.phaseout}</li>
-                            <li><strong>Ideal Client:</strong> ${deduction.client}</li>
                         </ul>
                     </div>
                 `;
@@ -325,9 +394,7 @@
                             callbacks: {
                                 label: function(context) {
                                     let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
+                                    if (label) { label += ': '; }
                                     label += '$' + context.parsed + ' Trillion';
                                     return label;
                                 }
@@ -343,12 +410,10 @@
             window.addEventListener('scroll', () => {
                 let current = 'home';
                 sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 80) {
+                    if (pageYOffset >= section.offsetTop - 80) {
                         current = section.getAttribute('id');
                     }
                 });
-
                 navLinks.forEach(link => {
                     link.classList.remove('nav-active');
                     if (link.getAttribute('href').substring(1) === current) {
