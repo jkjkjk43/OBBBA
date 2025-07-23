@@ -1,449 +1,925 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBBBA Tax Guide for Preparers (Definitive Edition)</title>
+    <title>Community CPA - Interactive OBBBA Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Chosen Palette: Professional Blue & Slate -->
-    <!-- Application Structure Plan: A task-oriented guide for tax professionals, rebuilt from scratch for maximum detail and clarity. The structure uses a tabbed UI for "Individual" and "Business" clients. Every single tax provision has its own detailed subsection containing an "Explanation" and a detailed "Client Scenario" with numerical examples. This modular, in-depth approach ensures every item is fully explained as requested. -->
-    <!-- Visualization & Content Choices: 
-        1. Report Info: All tax provisions. Goal: Inform/Explain/Apply. Viz/Method: A combination of detailed text explanations, HTML comparison tables, and specific callout boxes for client scenarios with calculations. Justification: This multi-faceted approach ensures that for every item, the user gets the "what," the "why," and the "how-to-apply" with concrete numbers.
-        2. Report Info: Energy credit terminations. Goal: Warn/Advise. Viz/Method: A prominent "Action Required" table. Justification: Creates urgency and flags critical deadlines.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-            color: #334155; /* slate-700 */
+            background-color: #f7f8fa;
         }
-        .tab-button {
-            transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-            border-bottom: 3px solid transparent;
-        }
-        .tab-button.active {
-            color: #2563eb;
+        .main-tab.active {
+            border-bottom-color: #4f46e5; /* Indigo-600 */
+            color: #312e81; /* Indigo-900 */
             font-weight: 600;
-            border-bottom-color: #2563eb;
         }
-        .tab-button:hover {
-            color: #2563eb;
+        .timeline-tab.active {
+            background-color: #4f46e5; /* Indigo-600 */
+            color: white;
+            box-shadow: 0 4px 14px 0 rgb(0 0 0 / 0.1);
         }
-        .tab-content {
-            display: none;
+        .timeline-effective {
+            color: #059669; /* Emerald-600 */
         }
-        .tab-content.active {
-            display: block;
+        .timeline-termination {
+            color: #dc2626; /* Red-600 */
         }
-        .explanation-box {
-            background-color: #f1f5f9; /* slate-100 */
-            padding: 1rem;
-            margin-top: 1rem;
-            border-radius: 0.25rem;
+        .provision-card {
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        .client-scenario {
-            background-color: #f0f9ff; /* sky-50 */
-            border-left: 4px solid #0284c7; /* sky-600 */
-            padding: 1rem;
-            margin-top: 1rem;
-            border-radius: 0.25rem;
+        .provision-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
-        .action-required {
-            background-color: #fef2f2; /* red-50 */
-            border-left: 4px solid #dc2626; /* red-600 */
-        }
-        .comparison-table th {
-            background-color: #f1f5f9; /* slate-100 */
+        .individual-border { border-top: 4px solid #8b5cf6; } /* Violet-500 */
+        .business-border { border-top: 4px solid #10b981; } /* Emerald-500 */
+        
+        .individual-text { color: #6d28d9; } /* Violet-700 */
+        .business-text { color: #047857; } /* Emerald-700 */
+
+        .individual-bg-light { background-color: #f5f3ff; } /* Violet-50 */
+        .business-bg-light { background-color: #ecfdf5; } /* Emerald-50 */
+        
+        [contenteditable="true"] {
+            outline: 2px solid #6366f1; /* Indigo-500 */
+            background-color: #eef2ff; /* Indigo-50 */
+            padding: 4px;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="bg-slate-50">
-    <header class="bg-white sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <h1 class="text-xl font-bold text-slate-800">OBBBA: Community CPA Tax Preparer's Guide</h1>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="mb-12">
+            <div class="flex items-center gap-4 mb-2">
+                 <div class="bg-indigo-100 p-3 rounded-full">
+                    <svg class="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                    </svg>
+                 </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Community CPA</h1>
             </div>
-        </div>
-    </header>
+            <p class="text-xl text-slate-600 pl-16">Your Interactive Guide to the OBBBA Tax Bill</p>
+            <p class="text-sm text-slate-500 mt-1 pl-16">Enacted July 4, 2025</p>
+        </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="text-center mb-8">
-            <h2 class="text-4xl md:text-5xl font-bold text-slate-800 mb-4">The Definitive Guide to OBBBA</h2>
-            <p class="max-w-3xl mx-auto text-lg text-slate-600">
-                A comprehensive, detailed resource for tax professionals. This guide explains every key tax change in the One Big Beautiful Bill Act, with actionable advice and client scenarios.
-            </p>
-        </div>
-
-        <!-- Tab Navigation -->
-        <div class="border-b border-slate-200 mb-8">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button class="tab-button active whitespace-nowrap py-4 px-1 text-base font-medium" data-tab="individual">Individual Clients</button>
-                <button class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium" data-tab="business">Business Clients</button>
-                <button class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium" data-tab="deadlines">Action Items & Deadlines</button>
-            </nav>
-        </div>
-
-        <!-- Tab Content -->
-        <div>
-            <!-- Individual Clients Tab -->
-            <div id="individual-tab" class="tab-content active space-y-8">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Core Individual Tax Framework</h3>
-                    <div id="individual-core-container"></div>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Education-Related Tax Benefits</h3>
-                    <div id="education-benefits-container"></div>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Family & Dependent Provisions</h3>
-                    <div id="family-credits-container"></div>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">New Targeted Deductions (Temporary: 2025-2028)</h3>
-                    <div id="new-deductions-container"></div>
-                </div>
-            </div>
-
-            <!-- Business Clients Tab -->
-            <div id="business-tab" class="tab-content space-y-8">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Core Business & International Tax</h3>
-                    <div id="core-business-container"></div>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Key Industry Provisions</h3>
-                    <div id="industry-provisions-container"></div>
+        <!-- Search and Filter Controls -->
+        <div class="sticky top-0 bg-f7f8fa/80 backdrop-blur-lg z-10 py-4 mb-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search provisions (e.g., 'Child Tax Credit', 'R&D', 'Sec. 70301')..." class="w-full p-3 pl-12 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
                 </div>
             </div>
             
-            <!-- Deadlines Tab -->
-            <div id="deadlines-tab" class="tab-content space-y-8">
-                 <div class="bg-white p-6 rounded-lg shadow-md action-required">
-                    <h3 class="text-2xl font-semibold text-red-700 mb-4">ACTION REQUIRED: Termination of Energy Credits</h3>
-                    <div class="explanation-box !bg-red-50 !border-red-200">
-                        <h4 class="font-bold text-red-800">Explanation</h4>
-                        <p class="text-sm text-red-700">The OBBBA systematically repeals the clean energy tax credits expanded by the Inflation Reduction Act (IRA). This represents a significant policy shift away from incentivizing green energy. Clients who made investment decisions based on the availability of these credits need to be notified immediately, as their expected return on investment may be severely impacted.</p>
-                    </div>
-                    <table id="credit-termination-table" class="w-full text-left comparison-table mt-4"></table>
+            <!-- Main Tab Navigation -->
+            <div class="mt-5 border-b border-slate-200">
+                <nav class="flex flex-wrap -mb-px justify-center" aria-label="Tabs">
+                    <button class="main-tab active text-lg py-4 px-6 border-b-4 border-transparent hover:border-slate-300 focus:outline-none" onclick="filterCategory('all')">All Provisions</button>
+                    <button class="main-tab text-lg py-4 px-6 border-b-4 border-transparent hover:border-slate-300 focus:outline-none" onclick="filterCategory('individual')">Individual</button>
+                    <button class="main-tab text-lg py-4 px-6 border-b-4 border-transparent hover:border-slate-300 focus:outline-none" onclick="filterCategory('business')">Business</button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div id="timeline" class="mb-10">
+             <h2 class="text-3xl font-bold text-center mb-5 text-slate-900">Effective Year Timeline</h2>
+             <div class="flex flex-wrap justify-center gap-2 bg-slate-200/70 p-2 rounded-full">
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('all')">Show All</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2024')">2024</button>
+                <button class="timeline-tab active flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2025')">2025</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2026')">2026</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2027')">2027</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2028')">2028</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2029')">2029</button>
+                <button class="timeline-tab flex-grow md:flex-grow-0 text-center py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition-all" onclick="filterTimeline('2030')">2030</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="provision-container" class="space-y-8">
+            <div id="no-results" class="hidden text-center text-slate-500 py-12">
+                <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p class="text-xl font-semibold mt-4">No provisions match your search.</p>
+                <p>Try clearing the search or selecting a different filter.</p>
+            </div>
+            <!-- Provision cards will be injected here by JS -->
+        </main>
+    </div>
+    
+    <!-- Password Modal -->
+    <div id="passwordModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+        <div class="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Enter Password to Edit</h3>
+                <div class="mt-2 px-7 py-3">
+                    <input type="password" id="passwordInput" class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" placeholder="Password" />
+                    <p id="passwordError" class="text-red-500 text-sm mt-1 hidden">Incorrect password. Please try again.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-slate-700 mb-4">Tax Provision Timeline</h3>
-                    <ul id="timeline-list" class="list-disc list-inside space-y-3"></ul>
+                <div class="items-center px-4 py-3">
+                    <button id="submitPassword" class="px-4 py-2 bg-indigo-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                        Submit
+                    </button>
+                     <button id="closeModal" class="mt-2 px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="bg-slate-800 text-white mt-20">
-        <div class="container mx-auto px-8 py-6 text-center text-sm">
-            <p>&copy; 2025 OBBBA Tax Preparer's Guide. For informational and educational purposes only.</p>
-        </div>
-    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const taxData = {
-                individualCore: [
-                    {
-                        title: 'Tax Rates & Standard Deduction',
-                        explanation: 'The OBBBA makes the lower individual income tax rates and the higher standard deduction from the 2017 Tax Cuts and Jobs Act (TCJA) permanent. Under prior law, these provisions were set to expire after 2025, which would have resulted in a significant tax increase for most Americans (the "tax cliff"). This change provides long-term certainty for tax planning.',
-                        table: [
-                            { name: 'Top Marginal Rate', old: '39.6% (reversion)', new: '37.0% (permanent)' },
-                            { name: 'Standard Deduction (MFJ)', old: '~ $29,200', new: '~ $31,500' }
-                        ],
-                        scenario: {
-                            title: 'Client Scenario: Standard Deduction',
-                            details: 'A married couple, both age 50, have an AGI of $150,000 and no significant itemized deductions.',
-                            steps: [
-                                '<strong>Under Old Law (2026 projection):</strong> Their standard deduction would have reverted to ~$29,200.',
-                                '<strong>Under New OBBBA Law:</strong> Their standard deduction is ~$31,500.',
-                                '<strong>Taxable Income Difference:</strong> $31,500 - $29,200 = $2,300 lower taxable income.',
-                                '<strong>Conclusion:</strong> At a 22% marginal rate, this results in a direct tax savings of approximately <strong>$506</strong> per year compared to what they would have paid without this change.'
-                            ]
-                        }
-                    },
-                    {
-                        title: 'State and Local Tax (SALT) Deduction',
-                        explanation: 'The bill temporarily increases the cap on the SALT deduction from $10,000 to $40,000 for 2025, with small increases until it expires after 2029. However, this benefit is limited for higher-income taxpayers through a phase-down mechanism where the cap is reduced for MAGI over $500,000.',
-                        table: [
-                            { name: '2025 Cap', old: '$10,000', new: '$40,000' },
-                            { name: '2030+ Cap', old: '$10,000', new: '$10,000' },
-                            { name: 'MAGI Phase-Down', old: 'N/A', new: 'Cap reduced above $500k MAGI' }
-                        ],
-                        scenario: {
-                            title: 'Client Scenario: SALT Deduction',
-                            details: 'A married couple in a high-tax state has a MAGI of $450,000 and paid $50,000 in property and state income taxes in 2025.',
-                            steps: [
-                                '<strong>Client MAGI:</strong> $450,000 is below the $500,000 phase-down threshold.',
-                                '<strong>Under Old Law:</strong> Their SALT deduction would be capped at $10,000.',
-                                '<strong>Under New OBBBA Law:</strong> Their SALT deduction is capped at $40,000.',
-                                '<strong>Additional Deduction:</strong> $40,000 - $10,000 = $30,000.',
-                                '<strong>Conclusion:</strong> At a 32% marginal rate, this additional deduction results in tax savings of <strong>$9,600</strong>.'
-                            ]
-                        }
-                    }
-                ],
-                educationBenefits: [
-                    {
-                        title: 'Educator Expense Deduction',
-                        explanation: 'This provision doubles the above-the-line deduction for eligible educators (K-12 teachers, aides, etc.) for out-of-pocket classroom expenses. As an above-the-line deduction, it reduces Adjusted Gross Income (AGI), making it more valuable as it can help taxpayers qualify for other income-limited credits and deductions.',
-                        table: [{ name: 'Deduction Limit', old: '$300', new: '$600 (indexed)' }],
-                        scenario: {
-                            title: 'Client Scenario: Educator Expenses',
-                            details: 'A teacher with a 12% marginal tax rate spends $700 on classroom supplies.',
-                            steps: [
-                                '<strong>Under Old Law:</strong> She could deduct $300, resulting in tax savings of $300 * 12% = $36.',
-                                '<strong>Under New OBBBA Law:</strong> She can deduct $600, resulting in tax savings of $600 * 12% = $72.',
-                                '<strong>Conclusion:</strong> The increased deduction provides double the tax benefit for her out-of-pocket costs.'
-                            ]
-                        }
-                    },
-                    {
-                        title: 'Employer Student Loan Assistance (Sec. 127)',
-                        explanation: 'This makes permanent the provision allowing employers to provide up to $5,250 per year in tax-free student loan repayment assistance to an employee. This amount is excluded from the employee\'s taxable income, making it a powerful and tax-efficient employee benefit.',
-                        table: [{ name: 'Annual Exclusion', old: '$5,250 (expired)', new: '$5,250 (permanent)' }],
-                        scenario: {
-                             title: 'Client Scenario: Student Loan Assistance',
-                            details: 'An employee in the 22% tax bracket receives the maximum $5,250 in student loan repayment assistance from their employer.',
-                            steps: [
-                                '<strong>Under Old Law (if expired):</strong> The $5,250 would be taxable income, resulting in $5,250 * 22% = $1,155 in additional federal tax.',
-                                '<strong>Under New OBBBA Law:</strong> The $5,250 is excluded from income.',
-                                '<strong>Conclusion:</strong> Making this provision permanent provides a direct tax savings of <strong>$1,155</strong> for the employee.'
-                            ]
-                        }
-                    }
-                ],
-                familyCredits: [
-                    {
-                        title: 'Child & Dependent Care',
-                        explanation: 'The bill significantly enhances credits and FSA limits for child and dependent care, making it more affordable. The Child and Dependent Care Tax Credit (CDCC) is made much more generous, and the pre-tax limit for Dependent Care FSAs is increased.',
-                        table: [
-                            { name: 'Child Tax Credit', old: '$2,000', new: '$2,200' },
-                            { name: 'CDCC (Max)', old: '$2,100', new: '$8,000' },
-                            { name: 'Dependent Care FSA Limit', old: '$5,000', new: '$7,500' }
-                        ],
-                        scenario: {
-                            title: 'Client Scenario: Childcare Costs',
-                            details: 'A client with two children under 13 pays $16,000 in daycare expenses. Their AGI is $120,000.',
-                            steps: [
-                                '<strong>Eligible Expenses for CDCC:</strong> The law limits eligible expenses to $8,000 for two or more children.',
-                                '<strong>Applicable Credit Percentage:</strong> At $120k AGI, the client is eligible for the maximum 50% credit rate.',
-                                '<strong>Credit Calculation:</strong> 50% * $8,000 (eligible expenses) = $4,000.',
-                                '<strong>Conclusion:</strong> The client receives a <strong>$4,000</strong> tax credit, a direct dollar-for-dollar reduction of their tax liability. This is nearly double the maximum credit under old law.'
-                            ]
-                        }
-                    },
-                    {
-                        title: '"Trump Accounts"',
-                        explanation: 'This creates a new type of tax-advantaged savings account for children under 18. Contributions are not deductible, but earnings grow tax-free, and qualified distributions (for education, home purchase, etc.) are tax-free. A pilot program provides a one-time $1,000 government contribution for newborns.',
-                        table: [{ name: 'Annual Contribution Limit', old: 'N/A', new: '$5,000' }],
-                        scenario: {
-                            title: 'Client Scenario: Newborn Child',
-                            details: 'A couple has a baby in 2025. They open a Trump Account and contribute $2,000.',
-                            steps: [
-                                '<strong>Client Contribution:</strong> $2,000.',
-                                '<strong>Government Contribution:</strong> The Treasury deposits a $1,000 tax credit directly into the account.',
-                                '<strong>Total Year 1 Balance:</strong> $3,000.',
-                                '<strong>Conclusion:</strong> The account provides an immediate 50% return on their initial investment due to the government contribution, and all future growth is tax-free if used for qualified expenses.'
-                            ]
-                        }
-                    }
-                ],
-                newDeductions: [
-                    { title: 'No Tax on Tips', icon: '&#x1F4B8;', limit: '$25,000', explanation: 'An above-the-line deduction for tip income, aimed at service industry workers.' },
-                    { title: 'No Tax on Overtime', icon: '&#x23F0;', limit: '$12,500', explanation: 'A deduction for the premium portion of overtime pay for hourly workers.' },
-                    { title: 'No Tax on Car Loan Interest', icon: '&#x1F697;', limit: '$10,000', explanation: 'A deduction for interest paid on a new car loan, subject to income limits.' }
-                ],
-                coreBusiness: [
-                     {
-                        title: 'Business Interest Limitation (Sec. 163(j))',
-                        explanation: 'This permanently changes the formula for limiting business interest deductions. The limit is now based on 30% of EBITDA (Earnings Before Interest, Taxes, Depreciation, and Amortization) instead of EBIT (Earnings Before Interest and Taxes). Adding back depreciation and amortization results in a much higher taxable income base, thus allowing for a larger interest deduction. This is highly beneficial for capital-intensive businesses with significant depreciation.',
-                        table: [{ name: 'Limitation Base', old: 'EBIT-based', new: 'EBITDA-based' }],
-                        scenario: {
-                            title: 'Client Scenario: 163(j) Calculation',
-                            details: 'A manufacturing company has $500k in EBITDA and $200k in depreciation. Their interest expense is $160k.',
-                            steps: [
-                                '<strong>EBIT:</strong> $500k (EBITDA) - $200k (Depreciation) = $300k.',
-                                '<strong>Old Law (EBIT-based) Limit:</strong> 30% * $300k = $90k. The company could only deduct $90k of its $160k interest expense, with $70k carried forward.',
-                                '<strong>New Law (EBITDA-based) Limit:</strong> 30% * $500k = $150k. The company can now deduct $150k of its interest expense, with only $10k carried forward.',
-                                '<strong>Conclusion:</strong> The new rule allows an additional <strong>$60,000</strong> interest deduction in the current year.'
-                            ]
-                        }
-                    },
-                    {
-                        title: 'Core Expensing & Corporate Rates',
-                        explanation: 'This section provides permanent certainty for foundational business tax provisions. Making the 21% corporate rate, 20% QBI deduction, 100% bonus depreciation, and immediate R&D expensing permanent allows for stable, long-term business planning without the uncertainty of expiring provisions.',
-                        table: [
-                            { name: 'Corporate Tax Rate', old: '21% (Temporary)', new: '21% (Permanent)' },
-                            { name: 'QBI Deduction', old: '20% (Temporary)', new: '20% (Permanent)' },
-                            { name: 'Bonus Depreciation', old: 'Phasing down', new: '100% (Permanent)' },
-                            { name: 'R&D Expensing', old: '5-year amortization', new: 'Immediate (Restored)' }
-                        ],
-                        scenario: {
-                             title: 'Client Scenario: Bonus Depreciation',
-                            details: 'A construction company buys a new excavator for $200,000 in 2026.',
-                            steps: [
-                                '<strong>Under Old Law:</strong> The bonus depreciation rate for 2026 was scheduled to be only 20%. The company could only expense $40,000 immediately.',
-                                '<strong>Under New OBBBA Law:</strong> The bonus depreciation rate is 100%.',
-                                '<strong>Conclusion:</strong> The company can immediately expense the full <strong>$200,000</strong> cost of the excavator, significantly reducing its current-year taxable income.'
-                            ]
-                        }
-                    },
-                    {
-                        title: 'International & Information Reporting',
-                        explanation: 'The bill repeals the "de minimis" rule, which allowed imports under $800 to enter the U.S. duty-free. This will impact e-commerce businesses that rely on direct-to-consumer shipping from overseas. It also increases the 1099 reporting threshold, reducing the administrative burden for businesses making small payments to contractors.',
-                        table: [
-                            { name: 'De Minimis Rule', old: '$800 duty-free', new: 'Repealed' },
-                            { name: '1099-NEC Threshold', old: '$600', new: '$2,000 (indexed)' }
-                        ],
-                        scenario: {
-                            title: 'Client Scenario: 1099 Reporting',
-                            details: 'A small business client paid a graphic designer $1,500 for a project in 2026.',
-                            steps: [
-                                '<strong>Under Old Law:</strong> A Form 1099-NEC would be required since the payment is over $600.',
-                                '<strong>Under New OBBBA Law:</strong> No Form 1099-NEC is required since the payment is below the new $2,000 threshold.',
-                                '<strong>Conclusion:</strong> This change reduces the administrative burden for clients making many small payments to contractors.'
-                            ]
-                        }
-                    }
-                ],
-                industryProvisions: [
-                    {
-                        title: 'Opportunity Zones',
-                        explanation: 'This provision revitalizes the Opportunity Zone program by extending the deferral period for capital gains invested into an Opportunity Fund. The original deferral ended in 2026; this extends it to 2030, giving investors more time to realize the tax benefits (deferral, reduction, and potential tax-free growth).',
-                        table: [{ name: 'Gain Deferral Period', old: 'Ends 2026', new: 'Extended to 2030' }],
-                        scenario: {
-                            title: 'Client Scenario: Capital Gains',
-                            details: 'A client sells stock in 2025 and realizes a $100,000 capital gain.',
-                            steps: [
-                                '<strong>Action:</strong> The client invests the $100,000 gain into a Qualified Opportunity Fund.',
-                                '<strong>Under Old Law:</strong> They would have had to recognize the gain on their 2026 tax return.',
-                                '<strong>Under New OBBBA Law:</strong> They can defer recognizing the gain until their 2030 tax return.',
-                                '<strong>Conclusion:</strong> This provides four additional years of tax deferral, allowing the invested capital to grow without immediate tax consequences.'
-                            ]
-                        }
-                    },
-                    {
-                        title: 'Advanced Manufacturing & Aerospace',
-                        explanation: 'These provisions use tax credits to incentivize specific domestic industries. The broad Advanced Manufacturing credit from the IRA is repealed and replaced with a more targeted credit for critical minerals and semiconductors. A new, separate credit is created specifically for domestic aerospace R&D.',
-                        table: [
-                            { name: 'Advanced Mfg. Credit', old: 'Broad IRA credit', new: 'Narrowed scope' },
-                            { name: 'Aerospace R&D Credit', old: 'N/A', new: 'New 15% credit' }
-                        ],
-                        scenario: {
-                            title: 'Client Scenario: Aerospace R&D',
-                            details: 'A qualifying aerospace company has $1,000,000 in eligible domestic R&D expenditures.',
-                            steps: [
-                                '<strong>Credit Calculation:</strong> $1,000,000 * 15% = $150,000.',
-                                '<strong>Conclusion:</strong> The company receives a <strong>$150,000</strong> tax credit, a direct dollar-for-dollar reduction of its tax liability, in addition to being able to expense the R&D costs.'
-                            ]
-                        }
-                    }
-                ],
-                creditTerminations: [
-                    { name: 'Clean Vehicle Credit (New & Used)', date: 'Sept 30, 2025' },
-                    { name: 'Residential Clean Energy Credit', date: 'Dec 31, 2025' },
-                    { name: 'Advanced Manufacturing Credit (most components)', date: 'Dec 31, 2025' }
-                ],
-                timeline: [
-                    { date: 'Jan 1, 2025', event: 'Permanent TCJA rates, 163(j) changes, and enhanced education/family credits become effective.' },
-                    { date: 'Sept 30, 2025', event: 'DEADLINE: Last day for a vehicle to be acquired to qualify for the Clean Vehicle Credit.' },
-                    { date: 'Dec 31, 2025', event: 'DEADLINE: Last day for residential clean energy property and most advanced manufacturing components to qualify for credits.' },
-                    { date: 'Jan 1, 2026', event: 'Increased 1099 reporting threshold takes effect.' },
-                    { date: 'Dec 31, 2028', event: 'EXPIRATION: New targeted deductions for tips, overtime, and car loan interest expire.' },
-                    { date: 'Dec 31, 2029', event: 'EXPIRATION: Increased SALT deduction cap expires.' }
-                ]
-            };
+        const provisions = [
+             // INDIVIDUAL PROVISIONS
+            {
+                title: "Section 529 Plan Enhancements (Sec. 70413, 70414)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "529 plan college savings k-12 tuition sec 70413 70414 apprenticeship credential",
+                summary: "This provision significantly expands the utility of 529 savings plans, making them a more flexible tool for a wider range of educational needs. It broadens the definition of qualified K-12 expenses beyond just tuition to include curriculum, books, online materials, tutoring, and educational therapies for students with disabilities. It also doubles the annual K-12 distribution limit to $20,000, allowing families to cover more costs tax-free. Crucially, it now allows 529 funds to pay for non-traditional postsecondary education, such as certification exams, apprenticeships, and professional licensing programs, supporting workforce development.",
+                before: "<ul><li class='ml-4 list-disc'>K-12 expenses were limited to $10,000 annually for tuition only.</li><li class='ml-4 list-disc'>Postsecondary use was generally restricted to traditional college costs at accredited institutions.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The K-12 limit is raised to $20,000 and covers a wide range of educational costs.</li><li class='ml-4 list-disc'>Funds can now be used for costs associated with workforce credentialing and apprenticeship programs.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> The expanded expense definitions apply to distributions after July 4, 2025. The $20,000 K-12 limit applies to tax years after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "In 2026, a family uses their 529 plan for two children. For their high schooler, they withdraw $12,000 for private school tuition and $1,500 for required curriculum, totaling $13,500. For their older child who is not in college, they withdraw $4,000 to pay for a certified coding bootcamp. All $17,500 of these withdrawals are now entirely tax-free. Previously, only the $10,000 of tuition would have qualified."
+            },
+            {
+                title: "Charitable Donations (for Non-Itemizers) (Sec. 70424)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "charitable contribution deduction non-itemizer standard deduction sec 70424",
+                summary: "This provision permanently reinstates and enhances the 'above-the-line' deduction for charitable contributions, specifically for the majority of taxpayers who do not itemize and instead take the standard deduction. This encourages charitable giving by allowing these taxpayers to receive a tax benefit for their donations directly, reducing their Adjusted Gross Income (AGI). The deductible amount is significantly increased from its prior, temporary level.",
+                before: "<ul><li class='ml-4 list-disc'>This deduction expired after 2021.</li><li class='ml-4 list-disc'>Non-itemizers received no tax benefit for charitable gifts.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A non-itemizer can deduct up to $1,000 (for single filers) or $2,000 (for married filing jointly) in cash contributions.</li><li class='ml-4 list-disc'>This deduction reduces AGI, which can also help taxpayers qualify for other tax benefits.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A married couple who takes the standard deduction in 2026 donates $2,500 to their local food bank. They can take a $2,000 deduction on their Form 1040. If their marginal tax rate is 22%, this deduction saves them $440 in taxes ($2,000 x 22%), a benefit they would not have received under prior law."
+            },
+            {
+                title: "Charitable Donations (for Itemizers) (Sec. 70425)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "charitable contribution deduction itemizer floor sec 70425",
+                summary: "A new limitation is introduced for taxpayers who itemize their deductions. This change requires that aggregate charitable contributions for the year must exceed a certain percentage of the taxpayer's income before any deduction can be taken. This 'floor' is designed to target the deduction to those with more significant philanthropic activity relative to their income.",
+                before: "<ul><li class='ml-4 list-disc'>Itemizers could deduct the full amount of their charitable contributions, subject only to high-level percentage limitations (e.g., 60% of AGI for cash).</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The first 0.5% of AGI in contributions is effectively non-deductible, creating a 'floor' that must be surpassed before the deduction begins.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "An itemizing taxpayer with an AGI of $200,000 donates $5,000 to charity in 2026.<br><strong>Step 1: Calculate the floor.</strong> 0.5% of $200,000 is $1,000. This is the non-deductible portion.<br><strong>Step 2: Calculate the deductible amount.</strong> $5,000 (Total Contribution) - $1,000 (Floor) = $4,000. Their charitable deduction is limited to $4,000."
+            },
+            {
+                title: "Credits for Contributions to SGOs (Sec. 70411)",
+                category: "individual",
+                startYear: 2027,
+                endYear: 2099, // Permanent
+                keywords: "scholarship granting organization sgo school choice sec 70411",
+                summary: "Creates a new federal tax credit to incentivize individual donations to qualified Scholarship Granting Organizations (SGOs) in states that voluntarily participate in the program. SGOs use these funds to provide scholarships for eligible K-12 students, often for private school tuition or other educational expenses. This credit is designed to complement existing state-level school choice programs.",
+                before: "<ul><li class='ml-4 list-disc'>No federal tax credit existed for these contributions.</li><li class='ml-4 list-disc'>Donations were only potentially deductible as a charitable contribution for itemizers.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A new non-refundable federal tax credit of up to $1,700 is available for cash contributions to SGOs.</li><li class='ml-4 list-disc'>The federal credit is reduced dollar-for-dollar by any state tax credit received for the same donation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent provision for taxable years ending after Dec 31, 2026.",
+                timelineTermination: "",
+                example: "In 2027, a taxpayer in a participating state donates $2,000 to a qualified SGO. The state provides a 25% tax credit for the donation.<br><strong>Step 1: Calculate the state credit.</strong> $2,000 x 25% = $500.<br><strong>Step 2: Calculate the potential federal credit.</strong> The credit is capped at $1,700, which is less than the $2,000 donation.<br><strong>Step 3: Reduce by state credit.</strong> $1,700 (Potential Federal Credit) - $500 (State Credit) = $1,200. The taxpayer can claim a $1,200 federal tax credit."
+            },
+            {
+                title: "AOTC and LLC Changes (Sec. 70606)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "american opportunity tax credit lifetime learning credit aotc llc education sec 70606",
+                summary: "Adds a stricter identification requirement to claim the American Opportunity Tax Credit (AOTC) and the Lifetime Learning Credit (LLC). This integrity measure is designed to ensure that only eligible individuals who are properly documented within the U.S. tax system can claim these valuable education credits. The taxpayer claiming the credit (typically the parent) must now provide their own Social Security Number (SSN) on the tax return.",
+                before: "<ul><li class='ml-4 list-disc'>The law required the name and taxpayer ID number (TIN) of the student for whom expenses were paid.</li><li class='ml-4 list-disc'>A parent with an ITIN could claim the credit for a child with an SSN.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The taxpayer claiming the credit must now also include their own valid SSN on the return.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A parent with an Individual Taxpayer Identification Number (ITIN) but not an SSN pays tuition for their child, who is a U.S. citizen with an SSN. For the 2026 tax year, the parent cannot claim the AOTC for their child's expenses because the parent does not have a valid SSN to report on the return."
+            },
+            {
+                title: "Adoption Credit Enhancements (Sec. 70402)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "adoption credit refundable sec 70402",
+                summary: "This provision enhances the nonrefundable adoption credit by making a portion of it refundable. Up to $5,000 of the credit can now be received as a cash refund, even if the taxpayer has no federal income tax liability. This change provides a more significant and immediate financial benefit to lower- and middle-income families who undertake an adoption but may not have enough tax liability to utilize the full credit otherwise.",
+                before: "<ul><li class='ml-4 list-disc'>The adoption credit was entirely nonrefundable.</li><li class='ml-4 list-disc'>It could only reduce tax liability to zero, and any excess was carried forward for up to 5 years.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Up to $5,000 of the credit is refundable, providing a direct cash benefit.</li><li class='ml-4 list-disc'>The remaining nonrefundable portion can still be used to offset tax liability and be carried forward.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2024.",
+                timelineTermination: "",
+                example: "A family completes an adoption in 2025 and has $18,000 in qualified adoption expenses, making them eligible for the full credit (let's assume it's $17,500 for 2025). Their total federal income tax liability for the year is only $4,000.<br><strong>Step 1 (Nonrefundable Portion):</strong> They first apply $4,000 of the credit to completely wipe out their tax liability.<br><strong>Step 2 (Refundable Portion):</strong> They can then receive up to $5,000 as a direct cash refund.<br><strong>Step 3 (Carryforward):</strong> The remaining credit is calculated: $17,500 (Total Credit) - $4,000 (Used for liability) - $5,000 (Refunded) = $8,500. This $8,500 is carried forward to reduce their taxes in future years."
+            },
+            {
+                title: "Dependent Care Program & Tax Credit (Sec. 70404, 70405)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "dependent care assistance program dcap child tax credit cdctc sec 70404 70405",
+                summary: "Enhances two key dependent care benefits to provide greater tax relief for working families. The maximum annual contribution to an employer-sponsored Dependent Care Assistance Program (DCAP) is increased from $5,000 to $7,500. The Child and Dependent Care Tax Credit (CDCTC) is also made more generous for lower- and middle-income families by restructuring its phase-down, allowing them to claim a higher percentage of their expenses.",
+                before: "<ul><li class='ml-4 list-disc'>DCAP contribution limit was $5,000.</li><li class='ml-4 list-disc'>The CDCTC provided a smaller benefit for most families under its permanent structure.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The DCAP limit is increased to $7,500.</li><li class='ml-4 list-disc'>The CDCTC provides a larger credit for many families due to a more favorable phase-down calculation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent changes for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "In 2026, an employee with two children in daycare can now contribute $7,500 of their pre-tax salary to their DCAP instead of $5,000. If they are in the 22% federal tax bracket, this change alone saves them an additional $550 in federal income taxes ($2,500 x 22%)."
+            },
+            {
+                title: "Wagering Losses Deduction (Sec. 70114)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "wagering gambling losses deduction sec 70114",
+                summary: "Modifies the deduction for gambling losses for taxpayers who itemize. Previously, losses were deductible up to the amount of winnings. The new rule states that the amount allowed as a deduction is equal to 90% of the losses, and this amount is still limited by the total winnings for the year. This effectively creates a 10% haircut on deductible losses.",
+                before: "<ul><li class='ml-4 list-disc'>A taxpayer could deduct 100% of their gambling losses, but only up to the amount of their gambling winnings.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A taxpayer can only deduct 90% of their gambling losses, still limited by the amount of their winnings.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "In 2026, an itemizing taxpayer has $15,000 in gambling winnings and $12,000 in gambling losses.<br><strong>Step 1: Calculate potential deduction.</strong> 90% of $12,000 losses = $10,800.<br><strong>Step 2: Apply winnings limit.</strong> The potential deduction ($10,800) is less than the winnings ($15,000), so the full $10,800 is deductible. Under the old law, they could have deducted the full $12,000."
+            },
+            {
+                title: "Health Savings Account (HSA) Rule Changes (Sec. 71306-71308)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "health savings account hsa telehealth bronze catastrophic direct primary care sec 71306 71307 71308",
+                summary: "Makes several favorable changes to HSAs to expand eligibility and flexibility. It permanently allows high-deductible health plans (HDHPs) to cover telehealth pre-deductible. It newly allows individuals covered by lower-cost 'Bronze' and 'Catastrophic' health plans to contribute to an HSA. It also clarifies that paying a fixed fee for a 'direct primary care' arrangement does not disqualify an individual from contributing to an HSA.",
+                before: "<ul><li class='ml-4 list-disc'>The telehealth safe harbor was temporary.</li><li class='ml-4 list-disc'>Bronze/Catastrophic plans were not HSA-eligible.</li><li class='ml-4 list-disc'>Direct primary care arrangements had an uncertain status regarding HSA eligibility.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The telehealth safe harbor is permanent.</li><li class='ml-4 list-disc'>HSA eligibility is expanded to cover more plan types and direct primary care arrangements.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent changes for plan years or months beginning after Dec 31, 2024, or 2025, depending on the provision.",
+                timelineTermination: "",
+                example: "In 2026, an individual is enrolled in a Catastrophic health plan. They also pay a $100 monthly fee to a direct primary care provider for routine visits. Under OBBBA, they are now eligible to contribute the maximum amount to an HSA, whereas previously they were ineligible for two reasons."
+            },
+            {
+                title: "Premium Tax Credit (PTC) Tightening (Sec. 71301-71305)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2027, // Phased-in changes
+                keywords: "premium tax credit ptc 36b health insurance obamacare aca eligible alien medicaid recapture sec 71301 71302 71303 71304 71305",
+                summary: "The bill significantly tightens eligibility for the PTC (Sec. 36B), limiting it to U.S. citizens and specific 'eligible aliens' (e.g., permanent residents). It also eliminates the cap on recapturing excess advance payments.",
+                before: "<ul><li class='ml-4 list-disc'>PTC was available to a broader group of lawfully present aliens.</li><li class='ml-4 list-disc'>Repayment of excess subsidies was capped for most taxpayers.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Eligibility is restricted, and the repayment cap is removed.</li><li class='ml-4 list-disc'>Exchanges must verify eligibility pre-enrollment.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent changes, phased in. Recapture limit removal is effective for tax years after Dec 31, 2025. 'Eligible alien' rule effective for tax years after Dec 31, 2026. Exchange verification effective for tax years after Dec 31, 2027.",
+                timelineTermination: "",
+                example: "A family of four in 2026 has an AGI of $150,000 (483% of FPL). They received $8,000 in advance PTC payments but were only eligible for $2,000. Before OBBBA, their repayment would have been capped at $3,000. After OBBBA, they must repay the full $6,000 excess."
+            },
+            {
+                title: "'No Tax on Tips' Deduction (Sec. 70201)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2028,
+                keywords: "tips tip income deduction sec 70201 server restaurant",
+                summary: "Creates a new, temporary deduction for up to $25,000 in qualified tip income. The deduction phases out for taxpayers with modified AGI above $150,000 (single) or $300,000 (joint).",
+                before: "<ul><li class='ml-4 list-disc'>All tip income was fully taxable.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Up to $25,000 in tips can be deducted from income.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Valid for taxable years 2025, 2026, 2027, and 2028.",
+                timelineTermination: "<strong>Terminates:</strong> Not available for taxable years beginning after Dec 31, 2028.",
+                example: "A server in 2026 has $30,000 in wages and $22,000 in tips. Their AGI is $52,000. Under OBBBA, they can take a $22,000 above-the-line deduction, reducing their AGI to $30,000. If they are in the 12% bracket, this saves them $2,640 in federal income tax."
+            },
+            {
+                title: "'No Tax on Overtime' Deduction (Sec. 70202)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2028,
+                keywords: "overtime pay deduction sec 70202 hourly worker",
+                summary: "Introduces a new, temporary deduction for up to $12,500 (single) or $25,000 (joint) in qualified overtime pay, subject to an income phase-out.",
+                before: "<ul><li class='ml-4 list-disc'>Overtime pay was fully taxable.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Up to $12,500/$25,000 in overtime pay can be deducted.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Valid for taxable years 2025, 2026, 2027, and 2028.",
+                timelineTermination: "<strong>Terminates:</strong> Not available for taxable years beginning after Dec 31, 2028.",
+                example: "A single hourly worker earns $60,000 in regular pay and $10,000 in overtime in 2027. Their AGI is $70,000. They can deduct the full $10,000 of overtime, reducing their AGI to $60,000. This moves them from the 22% marginal bracket to the 12% bracket, resulting in significant tax savings."
+            },
+            {
+                title: "Car Loan Interest Deduction (Sec. 70203)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2028,
+                keywords: "car loan auto vehicle interest deduction sec 70203",
+                summary: "Creates a new, temporary deduction for interest paid on a new passenger vehicle loan, limited to $10,000 per year. The vehicle must be assembled in the U.S. and the deduction phases out at higher incomes.",
+                before: "<ul><li class='ml-4 list-disc'>Interest on personal car loans was not deductible.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Up to $10,000 of interest on a new, U.S.-assembled car is deductible.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> For loans taken out from Jan 1, 2025, through Dec 31, 2028.",
+                timelineTermination: "<strong>Terminates:</strong> Does not apply to loans taken out after Dec 31, 2028.",
+                example: "In 2026, a couple with an AGI of $150,000 finances a new, U.S.-assembled truck. They pay $8,500 in interest for the year. They can take an $8,500 above-the-line deduction, reducing their AGI to $141,500 and saving them $1,870 in taxes (at the 22% bracket)."
+            },
+            {
+                title: "Child Tax Credit (CTC) Enhancement (Sec. 70104)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "child tax credit ctc sec 70104 kids family",
+                summary: "Permanently increases the Child Tax Credit (CTC) to $2,200 per child and indexes it for inflation. It also tightens the Social Security Number (SSN) requirement for eligibility.",
+                before: "<ul><li class='ml-4 list-disc'>$2,000 per child, set to revert to $1,000 after 2025.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>$2,200 per child, permanent and indexed for inflation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2024.",
+                timelineTermination: "",
+                example: "A married couple with two children (ages 8 and 10) and an AGI of $120,000 files their 2025 tax return. They will receive a total credit of $4,400 ($2,200 x 2), which is a $400 increase compared to the $4,000 they would have received under prior law."
+            },
+            {
+                title: "State and Local Tax (SALT) Deduction (Higher Cap) (Sec. 70120)",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2029,
+                keywords: "salt state local tax deduction sec 70120 property tax income tax",
+                summary: "The cap on the SALT deduction is temporarily increased to $40,000 for 2025 (and indexed for inflation through 2029), with a phase-down for taxpayers with AGI over $500,000.",
+                before: "<ul><li class='ml-4 list-disc'>A flat $10,000 cap per household.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A temporary, higher cap of $40,000+ that phases out for high earners.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> The higher cap is valid for taxable years 2025 through 2029.",
+                timelineTermination: "<strong>Terminates:</strong> The higher cap expires for taxable years beginning after Dec 31, 2029.",
+                example: "A couple in a high-tax state has $25,000 in property taxes and $18,000 in state income taxes, totaling $43,000. Their AGI is $450,000. In 2025, they can deduct $40,000 of these taxes, instead of just $10,000. This extra $30,000 deduction saves them $7,200 in federal tax at the 24% bracket."
+            },
+            {
+                title: "State and Local Tax (SALT) Deduction (Reversion) (Sec. 70120)",
+                category: "individual",
+                startYear: 2030,
+                endYear: 2099, // Permanent
+                keywords: "salt state local tax deduction sec 70120 property tax income tax",
+                summary: "After the temporary increase expires, the cap on the SALT deduction reverts to $10,000 per household, and this lower cap is made permanent.",
+                before: "<ul><li class='ml-4 list-disc'>A temporary higher cap of $40,000+ was in effect from 2025-2029.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The cap reverts to the permanent level of $10,000 per household.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> The $10,000 cap is permanent for taxable years beginning after Dec 31, 2029.",
+                timelineTermination: "",
+                example: "In 2030, the same couple with $43,000 in state and local taxes will see their deduction fall from the inflation-adjusted cap (e.g., ~$42,000) back down to $10,000, significantly increasing their federal tax liability."
+            },
+             {
+                title: "Trump Accounts (Sec. 70204)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "trump accounts savings children sec 70204 ira",
+                summary: "Establishes 'Trump Accounts,' a new type of tax-advantaged savings account for individuals under 18. Includes a pilot program for a $1,000 government contribution for eligible children born 2025-2028.",
+                before: "<ul><li class='ml-4 list-disc'>No such account existed.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A new savings vehicle for minors is created with government and employer contribution incentives.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent program for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A child is born in 2026. Their parents file an election, and the government deposits $1,000 into a new Trump Account. The account is invested in an S&P 500 index fund. The child's grandparents can also contribute up to $5,000 annually to this account."
+            },
+            {
+                title: "Termination of Clean Vehicle & Residential Energy Credits",
+                category: "individual",
+                startYear: 2025,
+                endYear: 2025,
+                keywords: "electric vehicle ev solar panels energy credit termination sec 70501 70502 70503 70505 70506",
+                summary: "The bill terminates several popular credits for individuals, including those for new/used clean vehicles and for residential energy property like solar panels.",
+                before: "<ul><li class='ml-4 list-disc'>Credits were available through 2032 or 2034.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Credits are terminated much earlier, in 2025 and 2026.</li></ul>",
+                timelineEffective: "",
+                timelineTermination: "<strong>Terminates:</strong> Clean Vehicle Credits end for vehicles acquired after Sep 30, 2025. Residential Energy Credits end for expenditures after Dec 31, 2025.",
+                example: "A homeowner signs a contract to install a $30,000 solar panel system on their roof in October 2025, with installation completed in January 2026. Because the expenditure was made after Dec 31, 2025, they are no longer eligible for the 30% ($9,000) tax credit."
+            },
+            {
+                title: "Student Loan Debt Discharge Exclusion (Sec. 70119)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "student loan debt discharge forgiveness disability death sec 70119",
+                summary: "Makes permanent the exclusion from gross income for student loan debt that is discharged due to the death or total and permanent disability of the student.",
+                before: "<ul><li class='ml-4 list-disc'>This exclusion was temporary and set to expire.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The exclusion is made a permanent part of the tax code.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for loan discharges occurring after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "In 2026, an individual's remaining $50,000 in federal student loans are discharged due to a determination of total and permanent disability. This $50,000 is not added to their income for the year and is completely tax-free."
+            },
+             {
+                title: "Casualty Loss Deduction Expansion (Sec. 70109)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "casualty loss deduction disaster state federal sec 70109",
+                summary: "Makes permanent the rule limiting personal casualty loss deductions to declared disasters, and expands it to include 'State declared disasters'.",
+                before: "<ul><li class='ml-4 list-disc'>Deduction limited to federally declared disasters, and this rule was temporary.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Rule is permanent and expanded to include state-declared disasters.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A severe ice storm in 2026 causes $50,000 in damage to a home, of which $30,000 is uninsured. The President does not issue a federal disaster declaration, but the state's Governor does. The homeowner can now claim a personal casualty loss deduction for the uninsured portion, subject to AGI limitations."
+            },
+            {
+                title: "Educator Expense Deduction Enhancement (Sec. 70110)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "educator expense deduction teacher coach sec 70110",
+                summary: "Removes the $300 cap on the educator expense deduction and expands eligibility to include coaches and sports administrators, as well as a broader range of instructional expenses.",
+                before: "<ul><li class='ml-4 list-disc'>Deduction capped at $300 for a narrow group of educators.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>No dollar cap and expanded eligibility for educators and expenses.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A high school science teacher spends $800 of their own money on lab supplies in 2026. Instead of being limited to a $300 deduction, they can now deduct the full $800."
+            },
+            // BUSINESS PROVISIONS
+            {
+                title: "Full Expensing (100% Bonus Depreciation) (Sec. 70301)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "bonus depreciation full expensing sec 70301 168k business investment equipment",
+                summary: "Permanently sets bonus depreciation at 100% for qualified business property, repealing the scheduled phase-down. This allows businesses to immediately write off the full cost of new and used equipment with a recovery period of 20 years or less.",
+                before: "<ul><li class='ml-4 list-disc'>Bonus depreciation was phasing down (60% in 2024, 40% in 2025, etc.).</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>100% bonus depreciation is made permanent, providing a significant incentive for capital investment.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for property acquired after Jan 19, 2025.",
+                timelineTermination: "",
+                example: "A construction company buys a new $500,000 excavator on March 1, 2025. Under the old law for 2025, they could only take a $200,000 (40%) bonus deduction. Under OBBBA, because it was acquired after Jan 19, 2025, they can deduct the full $500,000 in the first year."
+            },
+            {
+                title: "Domestic R&D Expensing (Sec. 70302)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "r&d research development expensing amortization sec 70302 174a",
+                summary: "Reverses a 2017 law change, allowing businesses to once again immediately deduct all domestic research and development (R&D) costs. This avoids the requirement to capitalize and amortize these costs over five years. Foreign R&D costs must still be capitalized and amortized over 15 years.",
+                before: "<ul><li class='ml-4 list-disc'>All R&D costs incurred after 2021 had to be amortized over 5 years (domestic) or 15 years (foreign).</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Immediate expensing is restored for all domestic R&D costs, improving cash flow for innovative companies.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2024.",
+                timelineTermination: "",
+                example: "A U.S. tech company incurs $10 million in domestic R&D costs in 2025. Instead of deducting only $1 million (first-year amortization), it can now deduct the full $10 million, reducing its 2025 taxable income by an additional $9 million."
+            },
+            {
+                title: "Section 179 Expensing Increase (Sec. 70306)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "section 179 expensing small business sec 70306",
+                summary: "Increases the maximum amount a business can immediately expense for qualifying property under Sec. 179 from ~$1M to $2.5M. It also raises the investment phase-out threshold (the point at which the deduction starts to decrease) from ~$2.5M to $4M. These new, higher limits are indexed for inflation.",
+                before: "<ul><li class='ml-4 list-disc'>~$1M max deduction, phasing out above ~$2.5M in total equipment purchases.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>$2.5M max deduction, phasing out above $4M in total equipment purchases.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2024.",
+                timelineTermination: "",
+                example: "In 2025, a small manufacturing firm buys and places in service $3.5 million worth of new machinery. Under the old rules, its Sec. 179 deduction would have been reduced. Under OBBBA, since $3.5M is below the new $4M threshold, they can immediately expense the full $2.5 million maximum."
+            },
+            {
+                title: "Special Depreciation for Production Property (Sec. 70307)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2030,
+                keywords: "special depreciation allowance manufacturing factory building sec 70307",
+                summary: "Creates a new, powerful tax incentive allowing a 100% first-year depreciation deduction for 'qualified production property.' This is defined as newly constructed nonresidential real property (buildings and structures) used in the U.S. for manufacturing, production, or refining of tangible goods.",
+                before: "<ul><li class='ml-4 list-disc'>Commercial buildings were generally depreciated over 39 years and were not eligible for bonus depreciation.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Qualifying new production facilities can be fully written off in the year they are placed in service.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Applies to property where construction begins after Jan 19, 2025.",
+                timelineTermination: "<strong>Terminates:</strong> Construction must begin before Jan 1, 2029, and property must be placed in service before Jan 1, 2031.",
+                example: "A company begins construction on a new $50 million U.S. factory in 2026 and places it in service in 2028. It can deduct the entire $50 million cost on its 2028 tax return, generating a massive immediate tax shield, instead of deducting only ~$1.28 million per year for 39 years."
+            },
+            {
+                title: "Paid Family and Medical Leave Credit (Sec. 70304)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "paid family medical leave credit pfml sec 70304 employer",
+                summary: "Makes the credit permanent and allows employers to base it on premiums paid for a qualifying insurance policy. Expands 'qualifying employee' definition to those employed for 6+ months.",
+                before: "<ul><li class='ml-4 list-disc'>A temporary credit based on wages paid to employees on leave who were employed for 1+ year.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A permanent credit that can be based on insurance premiums, with a shorter employee tenure requirement.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "In 2026, a company pays $100,000 in premiums for a qualifying paid leave insurance policy. It can now claim a tax credit based on a percentage of that $100,000 payment, simplifying compliance and potentially increasing the credit amount."
+            },
+            {
+                title: "Employer-Provided Childcare Credit (Sec. 70401)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "employer childcare credit sec 70401 daycare",
+                summary: "Enhances the credit by increasing the rate to 40% (50% for small businesses) and raising the annual cap to $500,000 ($600,000 for small businesses), indexed for inflation.",
+                before: "<ul><li class='ml-4 list-disc'>25% credit, capped at $150,000 annually.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>40% or 50% credit, capped at $500k or $600k, indexed to inflation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent enhancement for amounts paid or incurred after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A mid-sized company (not a small business) spends $800,000 in 2026 to build an on-site daycare. Its credit is now 40% of that amount, capped at $500,000. So, it receives a $320,000 tax credit ($800k * 40%), a significant increase from the old cap of $150,000."
+            },
+            {
+                title: "Employer Contributions to Student Loans (Sec. 70412)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "employer student loan repayment assistance sec 70412 127",
+                summary: "Makes permanent the provision allowing employers to provide up to $5,250 per year in tax-free student loan repayment assistance to employees.",
+                before: "<ul><li class='ml-4 list-disc'>This was a temporary provision set to expire after 2025.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The provision is made permanent and the $5,250 cap is indexed to inflation after 2026.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for payments made after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "As a recruiting tool in 2027, a company offers a student loan repayment benefit. It pays $5,250 directly to an employee's loan servicer. The company gets to deduct this as a business expense, and the employee receives the full $5,250 benefit tax-free."
+            },
+            {
+                title: "Limitation on Business Interest (Sec. 163(j)) (Sec. 70303)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "business interest limitation 163j ebit ebitda sec 70303",
+                summary: "Permanently adopts the stricter EBIT (Earnings Before Interest and Taxes) calculation for the business interest expense deduction limitation, disallowing the add-back for depreciation and amortization.",
+                before: "<ul><li class='ml-4 list-disc'>The stricter EBIT calculation was required starting in 2022.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The bill solidifies the permanent use of the EBIT calculation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2024.",
+                timelineTermination: "",
+                example: "A capital-intensive business in 2025 has $2M in earnings, $500k in interest expense, and $800k in depreciation. Its ATI is $2M (EBIT). The interest deduction limit is 30% of ATI, or $600k. Since its interest expense ($500k) is less than the limit, it can deduct it all. If its interest expense were $700k, it could only deduct $600k."
+            },
+            {
+                title: "Advanced Manufacturing Credits (Sec. 70308, 70514)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2029, // Various termination dates
+                keywords: "advanced manufacturing investment production credit sec 70308 70514 48d 45x",
+                summary: "Increases the Investment Credit (Sec. 48D) rate to 35%. Modifies and phases out the Production Credit (Sec. 45X) for wind components and critical minerals, but adds metallurgical coal as a qualifying mineral.",
+                before: "<ul><li class='ml-4 list-disc'>Investment credit was 25%.</li><li class='ml-4 list-disc'>Production credit had a longer lifespan.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Investment credit is 35%.</li><li class='ml-4 list-disc'>Production credit is terminated or phased out for certain components but expanded to include metallurgical coal.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Investment credit increase effective for property placed in service after Dec 31, 2025.",
+                timelineTermination: "<strong>Terminates:</strong> Production credit for wind components ends Dec 31, 2027. For metallurgical coal, it ends Dec 31, 2029.",
+                example: "A company invests $100 million in a new semiconductor manufacturing facility placed in service in 2026. It is now eligible for a $35 million tax credit (35% of $100M) instead of the $25 million credit available under prior law."
+            },
+            {
+                title: "'Spaceports' as Tax-Exempt Facilities (Sec. 70309)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "spaceports aerospace tax-exempt bonds sec 70309",
+                summary: "Allows private spaceport facilities to be financed with tax-exempt bonds, similar to airports, lowering capital costs for the aerospace industry.",
+                before: "<ul><li class='ml-4 list-disc'>This financing mechanism was not available for spaceports.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Private space companies can access lower-cost, tax-exempt financing.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for bonds issued after July 4, 2025.",
+                timelineTermination: "",
+                example: "A private aerospace company plans a $200 million expansion of its launch support facilities. By partnering with a state agency to issue tax-exempt bonds in late 2025, it can secure financing at a significantly lower interest rate than conventional taxable bonds, saving millions in interest costs over the life of the bonds."
+            },
+            {
+                title: "Opportunity Zones Renewal (Sec. 70421)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "opportunity zones oz sec 70421 investment rural",
+                summary: "Makes the Opportunity Zone program permanent, with a 10-year cycle for new zone designations. Modifies investor benefits and adds extensive new reporting requirements.",
+                before: "<ul><li class='ml-4 list-disc'>A temporary program with a one-time zone designation.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A permanent program with periodic redesignations and enhanced reporting.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> New reporting rules apply to tax years after July 4, 2025. New investment rules apply after Dec 31, 2026. New zone designations begin July 1, 2026.",
+                timelineTermination: "",
+                example: "An investor sells stock in 2027 with a $1 million capital gain and reinvests it into a Qualified Opportunity Fund. After holding the investment for 10 years (until 2037), they can elect to have their basis in the fund investment step up to its fair market value, potentially eliminating all capital gains tax on the appreciation of the fund investment itself."
+            },
+            {
+                title: "Tax-Exempt Organization Changes (Sec. 70415, 70416)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "tax-exempt nonprofit college endowment executive compensation sec 70415 70416",
+                summary: "Restructures the excise tax on private college endowments with new thresholds and a tiered rate system. Dramatically expands the excess compensation tax to apply to all employees, not just the top five.",
+                before: "<ul><li class='ml-4 list-disc'>Flat 1.4% tax on certain endowments.</li><li class='ml-4 list-disc'>Compensation tax limited to top 5 earners.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Tiered endowment tax based on per-student value.</li><li class='ml-4 list-disc'>Compensation tax applies to all employees.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent changes for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A large foundation in 2026 pays its CEO $1.5 million and its CFO $1.2 million. It must now pay a 21% excise tax on the excess compensation for both: $105,000 for the CEO ($500k * 21%) and $42,000 for the CFO ($200k * 21%), whereas before only the CEO might have been a covered employee."
+            },
+            {
+                title: "New Markets Tax Credit (NMTC) (Sec. 70423)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "new markets tax credit nmtc community development sec 70423",
+                summary: "Makes the New Markets Tax Credit (NMTC) a permanent part of the tax code, providing certainty for investments in low-income communities. It authorizes a $5 billion allocation for each calendar year and sets a 5-year carryforward period for any unused credit limitation.",
+                before: "<ul><li class='ml-4 list-disc'>The NMTC was a temporary provision that required periodic extensions by Congress. It was last extended through 2025.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The credit is made permanent, providing long-term certainty for community development investments.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent extension for calendar years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A Community Development Entity (CDE) applies for an NMTC allocation in 2027 to fund the construction of a grocery store in a food desert. Because the credit is now permanent, the CDE and its investors can plan this multi-year project with the assurance that the tax incentive will be available."
+            },
+            {
+                title: "QSBS Gain Exclusion (Sec. 1202) (Sec. 70431)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "qualified small business stock qsbs section 1202 startup investment sec 70431",
+                summary: "Expands the tax exclusion for gains on QSBS (Sec. 1202). For stock acquired after enactment, it creates a tiered exclusion: 50% for stock held 3 years, 75% for 4 years, and 100% for 5+ years. It also increases the per-issuer gain exclusion limit from $10M to $15M and raises the gross assets test for a qualifying corporation from $50M to $75M.",
+                before: "<ul><li class='ml-4 list-disc'>Generally, a 100% exclusion for stock held more than 5 years, with a $10M cap and a $50M gross assets test.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A new 3- and 4-year holding period offers partial exclusion. The 5-year exclusion remains 100%.</li><li class='ml-4 list-disc'>The gain and asset limits are increased.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for stock issued/acquired after July 4, 2025.",
+                timelineTermination: "",
+                example: "An angel investor acquires stock in a startup in August 2025. The startup's gross assets are $60 million. Under the old law, the stock would not be QSBS. Under OBBBA, it qualifies. If the investor sells the stock after 4 years for a $1 million gain, they can now exclude $750,000 of that gain from their income."
+            },
+            {
+                title: "Excess Business Loss Limitation (Sec. 70601)",
+                category: "business",
+                startYear: 2027,
+                endYear: 2099, // Permanent
+                keywords: "excess business loss limitation sec 461l passthrough sec 70601",
+                summary: "Makes the limitation on excess business losses for non-corporate taxpayers (e.g., owners of S-corps, partnerships, sole proprietorships) permanent. This rule prevents taxpayers from using large business losses to offset more than an inflation-adjusted threshold ($250k single / $500k joint) of their non-business income in a single year.",
+                before: "<ul><li class='ml-4 list-disc'>The limitation was temporary and scheduled to expire after 2028.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The limitation is made a permanent feature of the tax code.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for taxable years beginning after Dec 31, 2026.",
+                timelineTermination: "",
+                example: "In 2029, a married couple has $100,000 in wage income and a $800,000 loss from their S-corp. Under prior law, the limitation would have expired. Under OBBBA, they can only deduct an inflation-adjusted amount (e.g., ~$600,000) of the business loss against their wages. The remaining $200,000 loss is carried forward to the next year as a net operating loss."
+            },
+            {
+                title: "Percentage of Completion Method Exception (Sec. 70430)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "percentage of completion method construction completed contract sec 70430",
+                summary: "Expands an exception to the rule requiring the percentage-of-completion method for long-term contracts. The exception, which previously applied only to 'home construction,' is broadened to cover all 'residential construction contracts' for certain smaller contractors, allowing them to defer income recognition until a project is complete.",
+                before: "<ul><li class='ml-4 list-disc'>The exception was narrowly defined for home construction, forcing many residential builders to recognize income annually on multi-year projects.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The exception is expanded to include other residential construction (like apartment buildings), allowing more contractors to defer tax until projects are complete.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent change for contracts entered into in taxable years beginning after July 4, 2025.",
+                timelineTermination: "",
+                example: "A small construction company signs a 3-year contract in late 2025 to build a 20-unit apartment building. Under the old law, they would have to recognize income each year. Under OBBBA, they can use the completed-contract method and defer recognizing any income (and paying tax) on the project until it is fully completed in 2028."
+            },
+            {
+                title: "1099 Reporting Thresholds (Sec. 70432, 70433)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "1099k 1099misc 1099nec reporting threshold sec 70432 70433",
+                summary: "Reverses the planned reduction in the Form 1099-K reporting threshold, restoring it to the higher level of over 200 transactions AND over $20,000. It also increases the general reporting threshold for Forms 1099-MISC and 1099-NEC from $600 to $2,000, and indexes the new threshold for inflation.",
+                before: "<ul><li class='ml-4 list-disc'>The 1099-K threshold was set to become $600.</li><li class='ml-4 list-disc'>The 1099-MISC/NEC threshold was $600.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The 1099-K threshold is restored to $20,000/200 transactions.</li><li class='ml-4 list-disc'>The 1099-MISC/NEC threshold is increased to $2,000 and indexed for inflation.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> The 1099-K change is retroactive. The 1099-MISC/NEC change is for payments after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A business pays an independent contractor $1,500 for services in 2026. Under the old rule, the business would have to issue a Form 1099-NEC. Under OBBBA, no form is required because the payment is below the new $2,000 threshold."
+            },
+            {
+                title: "Farmland Sales Tax Deferral (Sec. 70437)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "farmland sale capital gains deferral installment sec 70437",
+                summary: "Creates a new tax benefit for the sale of farmland. When a taxpayer sells 'qualified farmland property' to a 'qualified farmer,' they can elect to pay the federal income tax on the gain in four equal annual installments.",
+                before: "<ul><li class='ml-4 list-disc'>Tax on the gain from selling farmland was generally due in the year of the sale.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>Tax on the gain can be spread over four years, improving cash flow for the seller.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent provision for sales in taxable years beginning after July 4, 2025.",
+                timelineTermination: "",
+                example: "A retiring farmer sells their land to a new, unrelated farmer in 2026, resulting in a capital gains tax liability of $100,000. Instead of paying the full amount with their 2026 tax return (due April 2027), they can elect to pay $25,000 with their 2026, 2027, 2028, and 2029 returns."
+            },
+            {
+                title: "Remittance Transfer Tax (Sec. 70604)",
+                category: "individual",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "remittance transfer tax moneygram western union sec 70604",
+                summary: "Imposes a new 1% excise tax on certain international money transfers. The tax is paid by the sender and collected by the remittance provider. It primarily applies to transfers funded with cash or money orders. Transfers funded from a U.S. bank account or with a U.S.-issued debit/credit card are exempt.",
+                before: "<ul><li class='ml-4 list-disc'>No such federal excise tax existed.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A 1% tax is imposed on cash-based remittance transfers.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent tax for transfers made after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "An individual goes to a money transfer service in 2026 and pays $500 in cash to send to a relative in another country. The provider must collect an additional $5 (1% of $500) for the new remittance tax, so the sender's total cost is $505 plus any service fees."
+            },
+            {
+                title: "Employee Retention Credit (ERC) Enforcement (Sec. 70605)",
+                category: "business",
+                startYear: 2025,
+                endYear: 2099, // Permanent
+                keywords: "employee retention credit erc enforcement statute of limitations sec 70605",
+                summary: "Enacts strict enforcement measures for the COVID-era ERC. It retroactively sets a hard deadline of Jan 31, 2024, for all claims. It extends the statute of limitations for the IRS to assess taxes on improper claims to 6 years and creates new penalties for 'COVID-ERTC promoters' who fail to perform due diligence.",
+                before: "<ul><li class='ml-4 list-disc'>The deadline for filing ERC claims was based on the standard statute of limitations (typically 3 years).</li><li class='ml-4 list-disc'>The assessment period was 3 or 5 years.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>A hard deadline of Jan 31, 2024, is retroactively imposed.</li><li class='ml-4 list-disc'>The IRS now has 6 years to audit claims, and new promoter penalties are in effect.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent enforcement changes, effective on July 4, 2025.",
+                timelineTermination: "",
+                example: "In August 2025, the IRS opens an audit on a business's 2021 ERC claim. Under the old law, the statute of limitations might have been closing. Under OBBBA, the IRS now has until 2028 (6 years from the 2021 return filing date) to assess any taxes due from an improper claim."
+            },
+            {
+                title: "International Tax Provisions (Sec. 70311-70354)",
+                category: "business",
+                startYear: 2026,
+                endYear: 2099, // Permanent
+                keywords: "international tax cfc gelti qbai look-thru sec 70311 70354",
+                summary: "Makes several 'America-First' changes to international tax law. Key changes include making the 'look-thru rule' for CFCs permanent, increasing the deemed paid credit for GILTI-related foreign taxes from 80% to 90%, repealing the 10% QBAI return on foreign assets from the GILTI calculation (making more foreign income taxable), and limiting 'downward attribution' of stock ownership from foreign persons.",
+                before: "<ul><li class='ml-4 list-disc'>The look-thru rule was temporary.</li><li class='ml-4 list-disc'>The GILTI foreign tax credit was limited to 80%.</li><li class='ml-4 list-disc'>GILTI excluded a 10% return on tangible foreign assets.</li></ul>",
+                after: "<ul><li class='ml-4 list-disc'>The look-thru rule is permanent.</li><li class='ml-4 list-disc'>The GILTI credit is increased to 90%.</li><li class='ml-4 list-disc'>The 10% QBAI exclusion is eliminated, increasing the GILTI tax base.</li></ul>",
+                timelineEffective: "<strong>Effective:</strong> Permanent changes, generally for taxable years beginning after Dec 31, 2025.",
+                timelineTermination: "",
+                example: "A U.S. company has a foreign subsidiary that earned $10M and had $8M in tangible assets (QBAI). Before, its GILTI base was $9.2M ($10M - 10% of $8M). After OBBBA, its GILTI base is the full $10M, increasing its U.S. taxable income. However, if the subsidiary paid foreign taxes, the U.S. company can now credit 90% of them instead of 80%."
+            }
+        ];
 
-            // --- RENDER FUNCTIONS ---
-            const renderSection = (containerId, data) => {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                let html = '';
-                data.forEach(item => {
-                    html += `<div class="pt-6 border-t border-slate-200 first:pt-0 first:border-t-0">`;
-                    html += `<h4 class="text-xl font-bold text-slate-800 mb-2">${item.title}</h4>`;
-                    if (item.explanation) {
-                        html += `<div class="explanation-box"><p class="text-sm text-slate-600">${item.explanation}</p></div>`;
-                    }
-                    if (item.table) {
-                        html += `<table class="w-full text-left comparison-table mt-4"><thead><tr><th class="p-2">Provision</th><th class="p-2">Old Law</th><th class="p-2 font-bold text-blue-600">New Law</th></tr></thead><tbody class="divide-y divide-slate-200">`;
-                        item.table.forEach(row => {
-                            html += `<tr><td class="p-2 font-semibold">${row.name}</td><td class="p-2">${row.old}</td><td class="p-2 font-bold text-blue-600">${row.new}</td></tr>`;
-                        });
-                        html += `</tbody></table>`;
-                    }
-                    if (item.scenario) {
-                        html += `<div class="client-scenario"><h5 class="font-bold text-sky-800">${item.scenario.title}</h5><p class="text-sm italic text-sky-700 mb-2">${item.scenario.details}</p><ul class="list-decimal list-inside text-sm space-y-1">`;
-                        item.scenario.steps.forEach(step => {
-                            html += `<li>${step}</li>`;
-                        });
-                        html += `</ul></div>`;
-                    }
-                    html += `</div>`;
-                });
-                container.innerHTML = html;
-            };
+        const provisionContainer = document.getElementById('provision-container');
+        const searchInput = document.getElementById('searchInput');
+        const noResultsDiv = document.getElementById('no-results');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const submitPasswordBtn = document.getElementById('submitPassword');
+        const closeModalBtn = document.getElementById('closeModal');
+        
+        let currentCategory = 'all';
+        let currentTimeline = '2025';
+        let cardToEdit = null;
+        
+        const applyFilters = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = document.querySelectorAll('.provision-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardKeywords = card.dataset.keywords.toLowerCase();
+                const cardCategory = card.dataset.category;
+                const start = parseInt(card.dataset.startYear);
+                const end = parseInt(card.dataset.endYear);
+                const current = parseInt(currentTimeline);
+                
+                const matchesCategory = currentCategory === 'all' || cardCategory === currentCategory;
+                
+                let matchesTimeline = currentTimeline === 'all' || (current >= start && current <= end);
+                
+                if (currentTimeline === '2024') {
+                    matchesTimeline = (start === 2025);
+                }
+                
+                const matchesSearch = searchTerm === '' || cardKeywords.includes(searchTerm);
+
+                if (matchesCategory && matchesTimeline && matchesSearch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResultsDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+        };
+
+        function filterCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.main-tab').forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            applyFilters();
+        }
+
+        function filterTimeline(year) {
+            currentTimeline = year;
+            document.querySelectorAll('.timeline-tab').forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            applyFilters();
+        }
+        
+        function toggleEditMode(card, isEditing) {
+            const editableElements = card.querySelectorAll('.editable');
+            editableElements.forEach(el => {
+                el.setAttribute('contenteditable', isEditing);
+            });
+            const editButton = card.querySelector('.edit-btn');
+            if (isEditing) {
+                editButton.textContent = 'Save';
+                editButton.classList.remove('bg-slate-200', 'hover:bg-slate-300');
+                editButton.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
+            } else {
+                editButton.textContent = 'Edit';
+                editButton.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
+                editButton.classList.add('bg-slate-200', 'hover:bg-slate-300');
+            }
+        }
+
+        function handleCardActions(event) {
+            const target = event.target;
+
+            // Handle Edit/Save Button for main content
+            if (target.classList.contains('edit-btn')) {
+                const card = target.closest('.provision-card');
+                const isCurrentlyEditing = card.querySelector('.editable[contenteditable="true"]');
+
+                if (isCurrentlyEditing) {
+                    toggleEditMode(card, false);
+                } else {
+                    cardToEdit = card;
+                    passwordModal.classList.remove('hidden');
+                    passwordInput.focus();
+                }
+            }
             
-            // --- POPULATE CONTENT ---
-            renderSection('individual-core-container', taxData.individualCore);
-            renderSection('education-benefits-container', taxData.educationBenefits);
-            renderSection('family-credits-container', taxData.familyCredits);
-            renderSection('core-business-container', taxData.coreBusiness);
-            renderSection('industry-provisions-container', taxData.industryProvisions);
+            // Handle Comment Edit/Save
+            if (target.classList.contains('edit-comment-btn')) {
+                const commentLi = target.closest('li');
+                const commentTextP = commentLi.querySelector('.comment-text');
+                const isEditing = commentTextP.isContentEditable;
 
-            const newDeductionsContainer = document.getElementById('new-deductions-container');
-            newDeductionsContainer.innerHTML = taxData.newDeductions.map(d => `
-                <div class="border border-slate-200 p-4 rounded-lg">
-                    <div class="flex items-center mb-2">
-                        <span class="text-3xl mr-3">${d.icon}</span>
-                        <h4 class="font-bold text-lg text-slate-800">${d.title}</h4>
-                    </div>
-                    <p class="text-sm text-slate-600 mb-2">${d.explanation}</p>
-                    <p class="text-sm"><strong>Limit:</strong> ${d.limit}</p>
-                </div>
-            `).join('');
+                if (isEditing) {
+                    commentTextP.contentEditable = false;
+                    target.textContent = 'Edit';
+                    target.classList.remove('bg-green-500', 'text-white');
+                    target.classList.add('bg-slate-200');
+                } else {
+                    commentTextP.contentEditable = true;
+                    commentTextP.focus();
+                    target.textContent = 'Save';
+                    target.classList.remove('bg-slate-200');
+                    target.classList.add('bg-green-500', 'text-white');
+                }
+            }
 
-            const creditTerminationTable = document.getElementById('credit-termination-table');
-            let termTableHtml = `<thead><tr><th class="p-2">Credit</th><th class="p-2 font-bold text-red-600">Termination Date</th></tr></thead><tbody class="divide-y divide-slate-200">`;
-            taxData.creditTerminations.forEach(item => {
-                termTableHtml += `<tr><td class="p-2">${item.name}</td><td class="p-2 font-bold text-red-600">${item.date}</td></tr>`;
-            });
-            termTableHtml += `</tbody>`;
-            creditTerminationTable.innerHTML = termTableHtml;
+            // Handle Comment Delete
+            if (target.classList.contains('delete-comment-btn')) {
+                target.closest('li').remove();
+            }
 
-            const timelineList = document.getElementById('timeline-list');
-            timelineList.innerHTML = taxData.timeline.map(item => `<li><span class="font-semibold">${item.date}:</span> ${item.event}</li>`).join('');
 
-            // --- TAB LOGIC ---
-            const tabs = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    const target = tab.getAttribute('data-tab');
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                        if (content.id === `${target}-tab`) {
-                            content.classList.add('active');
-                        }
-                    });
-                });
-            });
+            // Handle Comment Submission
+            if (target.classList.contains('submit-comment-btn')) {
+                event.preventDefault();
+                const card = target.closest('.provision-card');
+                const commentInput = card.querySelector('.comment-input');
+                const commentList = card.querySelector('.comment-list');
+                const commentText = commentInput.value.trim();
+
+                if (commentText) {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'bg-slate-100 p-3 rounded-md';
+                    
+                    listItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <p class="text-sm text-slate-700 comment-text flex-grow">${commentText}</p>
+                            <div class="flex gap-2 shrink-0 ml-4">
+                                <button class="edit-comment-btn text-xs font-semibold py-1 px-2 rounded bg-slate-200 hover:bg-slate-300 transition-colors">Edit</button>
+                                <button class="delete-comment-btn text-xs font-semibold py-1 px-2 rounded bg-red-100 text-red-700 hover:bg-red-200 transition-colors">Delete</button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">${new Date().toLocaleString()}</p>
+                    `;
+                    commentList.appendChild(listItem);
+                    commentInput.value = '';
+                }
+            }
+        }
+        
+        submitPasswordBtn.addEventListener('click', () => {
+            if (passwordInput.value === '4368') {
+                toggleEditMode(cardToEdit, true);
+                passwordModal.classList.add('hidden');
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+                cardToEdit = null;
+            } else {
+                passwordError.classList.remove('hidden');
+            }
         });
+
+        closeModalBtn.addEventListener('click', () => {
+            passwordModal.classList.add('hidden');
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            cardToEdit = null;
+        });
+
+
+        searchInput.addEventListener('input', applyFilters);
+        provisionContainer.addEventListener('click', handleCardActions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            provisionContainer.innerHTML = provisions.map(p => {
+                const timelineEffectiveHTML = p.timelineEffective ? `<p class="timeline-effective font-medium">${p.timelineEffective}</p>` : '';
+                const timelineTerminationHTML = p.timelineTermination ? `<p class="timeline-termination font-medium">${p.timelineTermination}</p>` : '';
+
+                 return `
+                    <div class="provision-card bg-white p-6 rounded-xl shadow-lg relative ${p.category === 'individual' ? 'individual-border' : 'business-border'}" 
+                         data-category="${p.category}" 
+                         data-start-year="${p.startYear}"
+                         data-end-year="${p.endYear}"
+                         data-keywords="${p.title.toLowerCase()} ${p.keywords}">
+                        
+                        <div class="absolute top-4 right-4">
+                            <button class="edit-btn text-xs font-semibold py-1 px-3 rounded-full bg-slate-200 hover:bg-slate-300 transition-colors">Edit</button>
+                        </div>
+
+                        <h2 class="text-2xl font-bold ${p.category === 'individual' ? 'individual-text' : 'business-text'} mb-3">${p.title}</h2>
+                        <div class="mb-4 text-slate-700 editable">${p.summary}</div>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm mb-4">
+                            <div class="bg-slate-100 p-4 rounded-lg flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-500 shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div class="editable"><strong class="block text-slate-800">Before OBBBA:</strong> ${p.before}</div>
+                            </div>
+                            <div class="${p.category === 'individual' ? 'individual-bg-light' : 'business-bg-light'} p-4 rounded-lg flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${p.category === 'individual' ? 'text-violet-600' : 'text-emerald-600'} shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div class="editable"><strong class="block ${p.category === 'individual' ? 'text-violet-800' : 'text-emerald-800'}">After OBBBA:</strong> ${p.after}</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-slate-100 border-t border-slate-200 p-4 rounded-b-lg text-sm space-y-2">
+                            ${timelineEffectiveHTML}
+                            ${timelineTerminationHTML}
+                        </div>
+                        <div class="mt-4 bg-white border border-slate-200 p-4 rounded-lg">
+                           <strong class="block text-slate-800 text-base mb-2">How it Works: Example</strong>
+                           <div class="text-sm text-slate-600 editable">${p.example}</div>
+                        </div>
+                        
+                        <!-- Comment Section -->
+                        <div class="mt-6 border-t pt-4">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Comments & Feedback</h3>
+                            <ul class="comment-list space-y-3 mb-4 max-h-48 overflow-y-auto">
+                                <!-- Comments will be added here -->
+                            </ul>
+                            <div class="flex gap-2">
+                                <textarea class="comment-input w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500" placeholder="Add a comment..."></textarea>
+                                <button class="submit-comment-btn shrink-0 px-4 py-2 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300">Post</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            applyFilters(); 
+        });
+
     </script>
 </body>
 </html>
